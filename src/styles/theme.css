@@ -1,0 +1,306 @@
+/* =========================================================
+   THEME: Java / JVM Cinematic
+   - Bytecode rain (subtle)
+   - Coffee steam drift
+   - Terminal-glass holo border
+   - CAFEBABE micro-details
+========================================================= */
+
+:root {
+    --ease: cubic-bezier(0.2, 0.85, 0.2, 1);
+    --ease2: cubic-bezier(0.16, 1, 0.3, 1);
+
+    /* Java colors derived from base accent */
+    --java-orange: var(--accent);
+    --java-blue: var(--accent2);
+    --terminal-green: var(--green);
+
+    /* motion controlled by JS */
+    --mx: 50%;
+    --my: 45%;
+    --tiltX: 0deg;
+    --tiltY: 0deg;
+    --glow-x: 0px;
+    --glow-y: 0px;
+    --bytecode-speed: 16s;
+}
+
+/* Background mesh tuned for Java vibe */
+body {
+    background:
+            radial-gradient(1100px 720px at 18% 18%, rgba(248, 152, 32, 0.14), transparent 62%),
+            radial-gradient(980px 640px at 88% 25%, rgba(47, 109, 181, 0.10), transparent 62%),
+            radial-gradient(920px 700px at 55% 92%, rgba(57, 255, 136, 0.06), transparent 65%),
+            linear-gradient(180deg, var(--bg0) 0%, var(--bg1) 60%, #050615 100%);
+}
+
+/* Grain */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.10;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+    background-size: 240px 240px;
+}
+
+/* Coffee steam drift (soft) */
+body::after {
+    content: "";
+    position: fixed;
+    inset: -40vh -35vw;
+    pointer-events: none;
+    opacity: 0.52;
+
+    background:
+            radial-gradient(900px 520px at 22% 25%, rgba(248, 152, 32, 0.16), transparent 62%),
+            radial-gradient(820px 540px at 78% 20%, rgba(47, 109, 181, 0.10), transparent 62%),
+            radial-gradient(980px 760px at 60% 90%, rgba(57, 255, 136, 0.06), transparent 65%),
+            radial-gradient(820px 520px at 50% 55%, rgba(255,255,255,0.03), transparent 60%);
+
+    transform: translate3d(var(--glow-x), var(--glow-y), 0);
+    filter: blur(0.2px);
+    transition: transform 900ms var(--ease);
+}
+
+/* Spotlight + scanlines + vignette */
+.reveal::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 5;
+    background:
+            radial-gradient(900px 700px at var(--mx) var(--my), rgba(255,255,255,0.06), transparent 62%),
+            radial-gradient(1500px 1100px at 50% 50%, transparent 55%, rgba(0,0,0,0.42) 100%),
+            repeating-linear-gradient(
+                    180deg,
+                    rgba(255,255,255,0.012) 0px,
+                    rgba(255,255,255,0.012) 1px,
+                    transparent 2px,
+                    transparent 7px
+            );
+    opacity: 0.92;
+}
+
+/* Bytecode rain layer */
+.reveal::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 6;
+    opacity: 0.22;
+
+    background:
+            repeating-linear-gradient(
+                    90deg,
+                    rgba(57,255,136,0.00) 0px,
+                    rgba(57,255,136,0.00) 10px,
+                    rgba(57,255,136,0.06) 11px,
+                    rgba(57,255,136,0.00) 12px,
+                    rgba(57,255,136,0.00) 22px
+            ),
+            repeating-linear-gradient(
+                    180deg,
+                    rgba(57,255,136,0.00) 0px,
+                    rgba(57,255,136,0.00) 26px,
+                    rgba(57,255,136,0.04) 27px,
+                    rgba(57,255,136,0.00) 28px,
+                    rgba(57,255,136,0.00) 54px
+            );
+
+    transform: translateY(0);
+    animation: bytecodeRain var(--bytecode-speed) linear infinite;
+    mix-blend-mode: screen;
+}
+
+@keyframes bytecodeRain {
+    from { transform: translateY(-4%); }
+    to { transform: translateY(8%); }
+}
+
+/* Terminal-glass card + tilt */
+.slide-body {
+    background: linear-gradient(180deg, rgba(6, 8, 14, 0.72), rgba(8, 10, 18, 0.44));
+    border-color: rgba(255,255,255,0.10);
+    backdrop-filter: blur(18px);
+
+    transform: perspective(1200px) rotateX(var(--tiltX)) rotateY(var(--tiltY));
+    transform-origin: center;
+    transition: transform 260ms var(--ease2);
+}
+
+/* inner sheen */
+.slide-body::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background:
+            radial-gradient(820px 280px at 18% 10%, rgba(255,255,255,0.11), transparent 62%),
+            radial-gradient(560px 280px at 92% 26%, rgba(255,255,255,0.06), transparent 60%),
+            radial-gradient(900px 520px at 50% 110%, rgba(248,152,32,0.05), transparent 64%);
+    opacity: 0.90;
+}
+
+/* CAFEBABE ring border (subtle) — validator-friendly (no mask-composite) */
+.slide-body::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+
+    /* Create a gradient border using border-image */
+    border: 1px solid transparent;
+    border-image: conic-gradient(
+            from 0deg,
+            rgba(248, 152, 32, 0.75),
+            rgba(57, 255, 136, 0.38),
+            rgba(47, 109, 181, 0.55),
+            rgba(248, 152, 32, 0.75)
+    )
+    1;
+
+    opacity: 0.34;
+    animation: ringSpin 14s linear infinite;
+}
+
+@keyframes ringSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Cinematic entrance */
+.jugt-animate .slide-body {
+    animation: wipeIn 820ms var(--ease2) both;
+}
+
+@keyframes wipeIn {
+    from {
+        clip-path: inset(0 0 100% 0 round 26px);
+        opacity: 0;
+        filter: blur(3px);
+    }
+    to {
+        clip-path: inset(0 0 0% 0 round 26px);
+        opacity: 1;
+        filter: blur(0);
+    }
+}
+
+/* stagger children */
+.jugt-animate .slide-body > * {
+    animation: popIn 720ms var(--ease2) both;
+}
+.jugt-animate .slide-body > *:nth-child(1) { animation-delay: 120ms; }
+.jugt-animate .slide-body > *:nth-child(2) { animation-delay: 200ms; }
+.jugt-animate .slide-body > *:nth-child(3) { animation-delay: 280ms; }
+.jugt-animate .slide-body > *:nth-child(4) { animation-delay: 360ms; }
+.jugt-animate .slide-body > *:nth-child(5) { animation-delay: 440ms; }
+.jugt-animate .slide-body > *:nth-child(6) { animation-delay: 520ms; }
+
+@keyframes popIn {
+    from { opacity: 0; transform: translateY(10px) scale(0.985); filter: blur(2px); }
+    to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+
+/* Title slide: Java glow + cursor */
+.reveal .slides > section[data-type="title"] .h1 {
+    background: linear-gradient(90deg, rgba(255,255,255,0.96), rgba(248,152,32,0.75), rgba(255,255,255,0.92));
+    background-size: 220% 220%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shimmer 7s var(--ease) infinite;
+}
+
+@keyframes shimmer {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.reveal .slides > section[data-type="title"] .h1::after {
+    display: inline-block;
+    margin-left: 10px;
+    color: rgba(57,255,136,0.9);
+    animation: cursorBlink 1.05s steps(1) infinite;
+    transform: translateY(-2px);
+}
+
+
+/* Code editor chrome + terminal hint */
+.codeframe {
+    position: relative;
+}
+
+.codeframe::before {
+    content: "CAFEBABE  •  JVM";
+    display: block;
+    height: 36px;
+    padding: 10px 14px 0 14px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: rgba(57,255,136,0.65);
+    background: linear-gradient(90deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+    border-bottom: 1px solid rgba(255,255,255,0.10);
+}
+
+/* Sponsor strip premium edge */
+.sponsor-strip {
+    border-color: rgba(255,255,255,0.12);
+    background: rgba(0,0,0,0.14);
+    box-shadow: 0 18px 60px rgba(0,0,0,0.45);
+}
+.sponsor-strip::before,
+.sponsor-strip::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 34px;
+    pointer-events: none;
+    z-index: 2;
+}
+.sponsor-strip::before {
+    left: 0;
+    background: linear-gradient(90deg, rgba(0,0,0,0.55), transparent);
+}
+.sponsor-strip::after {
+    right: 0;
+    background: linear-gradient(270deg, rgba(0,0,0,0.55), transparent);
+}
+
+/* Micro interaction */
+.colbox,
+.speaker,
+.mediaframe,
+.codeframe,
+.chip,
+.sponsor {
+    transition: transform 260ms var(--ease2), border-color 260ms var(--ease2);
+}
+.colbox:hover,
+.speaker:hover,
+.mediaframe:hover,
+.codeframe:hover {
+    transform: translateY(-2px);
+    border-color: rgba(248, 152, 32, 0.24);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    body::after { transition: none; }
+    .slide-body::after { animation: none; }
+    .jugt-animate .slide-body { animation: none; clip-path: none; opacity: 1; filter: none; }
+    .jugt-animate .slide-body > * { animation: none; opacity: 1; transform: none; filter: none; }
+    .reveal::before, .reveal::after { display: none; }
+    .slide-body { transform: none !important; }
+    .reveal .slides > section[data-type="title"] .h1::after { display: none; }
+}

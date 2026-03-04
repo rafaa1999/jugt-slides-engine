@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <title>JUGT Slides</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap"
+            rel="stylesheet"
+    />
+
+    <!-- Reveal -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/theme/black.css" />
+
+    <!-- Highlight -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.10.0/styles/github-dark.min.css" />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/src/styles/base.css" />
+    <link rel="stylesheet" href="/src/styles/theme.css" />
+</head>
+
+<body>
+<div id="app">
+    <div class="reveal">
+        <div class="slides" id="slides"></div>
+
+        <!-- overlays -->
+        <div id="overlay" class="overlay" aria-hidden="true">
+            <div class="overlay__left">
+                <img id="jugtLogo" class="brand-logo hidden" alt="JUGT" />
+                <div class="overlay__meta">
+                    <div id="deckTitle" class="overlay__title hidden"></div>
+                    <div id="deckEvent" class="overlay__subtitle hidden"></div>
+                </div>
+            </div>
+
+            <div class="overlay__right">
+                <div id="sponsorStrip" class="sponsor-strip hidden" aria-label="Sponsors"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="fatal" class="fatal hidden" role="alert"></div>
+</div>
+
+<!-- Reveal JS -->
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5/plugin/highlight/highlight.js"></script>
+
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>

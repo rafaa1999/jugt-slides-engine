@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.DS_Store
+.vscode/
+src/generated/talk-data.json
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*

@@ -1,0 +1,165 @@
+meta:
+  title: "JUGT Slides Engine"
+  shortTitle: "JUGT Slides"
+  event: "Java User Group Tunisia"
+  date: "2026-03-15"
+  venue: "Tunis, Tunisia"
+  language: "en"
+
+theme:
+  accentColor: "#F89820"
+  glass: true
+  backgroundVariant: "aurora"
+  slideNumber: true
+  showProgress: true
+
+branding:
+  jugtLogo: "/assets/jugt-logo.png"
+
+presenters:
+  - name: "Yassin Ghariani"
+    role: "Founder, JUGT"
+    company: "Java User Group Tunisia"
+    photo: ""
+    socials:
+      - label: "@gharianiyassin.thinker"
+        url: ""
+      - label: "JUGT"
+        url: ""
+
+sponsors:
+  - name: "JetBrains"
+    tier: "Gold"
+    logo: "/assets/sponsors/jetbrains.png"
+    url: ""
+
+slides:
+  - type: "title"
+    title: "JUGT Slides Engine"
+    subtitle: "Java/JVM cinematic decks from a single YAML file"
+    showPresenters: true
+    note: "Everything in this presentation is generated from talk.yml"
+
+  - type: "section"
+    title: "CAFEBABE → Bytecode → Stage"
+    subtitle: "Building slides the Java way"
+
+  - type: "agenda"
+    title: "Agenda"
+    items:
+      - "Why YAML driven slides"
+      - "Adaptive slide layouts"
+      - "Code storytelling"
+      - "Media and QR slides"
+      - "Extending slide types"
+
+  - type: "two-column"
+    title: "What this system gives you"
+    left:
+      heading: "For Speakers"
+      bullets:
+        - "Edit one file"
+        - "No HTML editing"
+        - "Clean default layouts"
+        - "Hot reload during development"
+    right:
+      heading: "For Organizers"
+      bullets:
+        - "Consistent meetup branding"
+        - "Sponsor ticker"
+        - "Reusable presentation engine"
+        - "Professional conference style"
+
+  - type: "section"
+    title: "Single Source of Truth"
+    subtitle: "Everything comes from talk.yml"
+
+  - type: "code"
+    title: "Minimal Slide Definition"
+    language: "yaml"
+    code: |
+      slides:
+        - type: "title"
+          title: "Hello JUGT"
+          subtitle: "Java community in Tunisia"
+
+        - type: "code"
+          title: "Example"
+          language: "java"
+          code: |
+            class Hello {
+              public static void main(String[] args) {
+                System.out.println("Hello JUGT");
+              }
+            }
+
+  - type: "section"
+    title: "Code Driven Talks"
+    subtitle: "Show real Java code"
+
+  - type: "code"
+    title: "Java Example"
+    language: "java"
+    code: |
+      import java.time.Instant;
+
+      public class Demo {
+        public static void main(String[] args) {
+          System.out.println("JUGT @ " + Instant.now());
+        }
+      }
+    caption: "Code highlighting is handled automatically"
+
+  - type: "code"
+    title: "Switch Pattern Matching"
+    language: "java"
+    code: |
+      public class SwitchDemo {
+
+        static String describe(Object o) {
+          return switch (o) {
+            case null -> "null";
+            case Integer i -> "int=" + i;
+            case String s -> "str=" + s.toUpperCase();
+            default -> "object=" + o.getClass().getSimpleName();
+          };
+        }
+
+        public static void main(String[] args) {
+          System.out.println(describe(42));
+          System.out.println(describe("jugt"));
+        }
+      }
+
+  - type: "section"
+    title: "Adaptive Slides"
+    subtitle: "The layout never breaks"
+
+  - type: "image"
+    title: "Image Slide"
+    src: ""
+    alt: "Architecture"
+    caption: "If the image is missing a placeholder appears"
+
+  - type: "video"
+    title: "Video Slide"
+    mode: "youtube"
+    youtubeId: ""
+    caption: "If the video is missing a fallback UI appears"
+
+  - type: "section"
+    title: "Join JUGT"
+    subtitle: "Grow the Java community"
+
+  - type: "qr"
+    title: "Scan to Join"
+    subtitle: "Java User Group Tunisia"
+    url: ""
+    hint: "Open your camera and scan"
+
+  - type: "closing"
+    title: "Thank You"
+    subtitle: "Questions?"
+    callToAction:
+      label: "Java User Group Tunisia"
+      url: ""
