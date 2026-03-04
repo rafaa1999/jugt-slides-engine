@@ -1,8 +1,26 @@
+# dependencies
 node_modules/
+
+# build
 dist/
-.DS_Store
-.vscode/
+build/
+
+# generated
 src/generated/talk-data.json
+
+# logs
 npm-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# editors
+.vscode/
+.idea/
+
+# misc
+.env
+.env.local
