@@ -1,0 +1,100 @@
+slides:
+  - type: "section"
+    title: "Text Block"
+    subtitle: "From Java 13 Preview to Final in Java 15"
+
+  - type: "section"
+    title: "Why Do We Need Text Blocks?"
+    subtitle: "Multi-line strings in Java were painful to write and read"
+    bullets:
+      - "Strings spanning multiple lines required + concatenation on every line"
+      - "Escape sequences cluttered HTML, JSON, SQL embedded in Java code"
+      - "Indentation of the source code leaked into the string value"
+    note: "Text blocks let you write the string as it looks, no escaping, no concatenation"
+
+  - type: "code-compare"
+    title: "Old String vs Text Block"
+    left:
+      title: "Before Java 13: escape + concatenation"
+      language: "java"
+      caption: "Hard to read, hard to maintain, every quote and newline must be escaped"
+      code: |
+        String html =
+            "<html>\n" +
+            "  <body>\n" +
+            "    <p>Hello</p>\n" +
+            "  </body>\n" +
+            "</html>";
+    right:
+      title: "Java 13 Preview: text block"
+      language: "java"
+      caption: "Write the string as it looks, the compiler handles escaping and indentation"
+      code: |
+        String html = """
+                <html>
+                  <body>
+                    <p>Hello</p>
+                  </body>
+                </html>
+                """;
+
+  - type: "section"
+    title: "Java 13: First Preview (JEP 355)"
+    subtitle: "Multi-line strings with automatic whitespace handling"
+    bullets:
+      - "Syntax: starts with \"\"\" + newline, ends with \"\"\""
+      - "Incidental whitespace removed, indentation aligned to closing \"\"\""
+      - "Line terminators normalized to \\n regardless of OS"
+      - "No way to prevent trailing newline or preserve trailing spaces yet"
+    note: "Preview in Java 13: opt-in with --enable-preview"
+
+  - type: "section"
+    title: "Java 14: Second Preview (JEP 368)"
+    subtitle: "Two new escape sequences for formatting control"
+    bullets:
+      - "\\ (backslash) at end of line, suppresses the newline, joins with next line"
+      - "\\s (space escape), preserves a trailing space that would otherwise be stripped"
+      - "Solves the two main limitations of the Java 13 preview"
+    note: "Preview in Java 14: same --enable-preview opt-in required"
+
+  - type: "code-compare"
+    title: "Java 14: New Escape Sequences"
+    left:
+      title: "\\ — suppress line break"
+      language: "java"
+      caption: "Backslash at end of line joins it with the next, result is a single line"
+      code: |
+        String text = """
+                This is a long string \
+                that spans two source lines \
+                but is one line in the result.
+                """;
+        // Result: "This is a long string that spans..."
+    right:
+      title: "\\s — preserve trailing space"
+      language: "java"
+      caption: "\\s anchors trailing spaces so the whitespace stripper leaves them intact"
+      code: |
+        String colors = """
+                red  \s
+                green\s
+                blue \s
+                """;
+        // Each line ends with a preserved space
+
+  - type: "two-column"
+    title: "Text Blocks: Java 13 Preview → Java 15 Final"
+    left:
+      heading: "Java 13–14 (Preview)"
+      bullets:
+        - "Java 13: basic multi-line syntax (JEP 355)"
+        - "Java 14: \\ and \\s escape sequences (JEP 368)"
+        - "Opt-in with --enable-preview both versions"
+        - "Incidental whitespace removal + line ending normalization"
+    right:
+      heading: "Java 15 (Final — JEP 378)"
+      bullets:
+        - "Standard feature, no flag required"
+        - "No further syntax changes from Java 14"
+        - "New String methods: stripIndent(), translateEscapes(), formatted()"
+        - "Text blocks are standard String literals, no special runtime type"

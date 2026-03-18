@@ -1,0 +1,155 @@
+slides:
+  - type: "section"
+    title: "Switch"
+    subtitle: "From Java 12 Preview to Final in Java 14"
+
+  - type: "section"
+    title: "Why switch over if/else?"
+    subtitle: "Cleaner branching when testing one variable against many values"
+    bullets:
+      - "Avoids repeated condition checks on the same variable"
+      - "More readable when handling 3+ discrete values"
+      - "Compiler can optimize switch better than chained if/else"
+    note: "Same logic, less noise, switch wins on clarity"
+
+  - type: "code-compare"
+    title: "If/Else vs Switch (Before Java 12)"
+    left:
+      title: "If/Else"
+      language: "java"
+      caption: "Repetitive condition checks on the same variable"
+      code: |
+        int status = 2;
+        String message;
+
+        if (status == 1) {
+            message = "Pending";
+        } else if (status == 2) {
+            message = "Approved";
+        } else if (status == 3) {
+            message = "Rejected";
+        } else {
+            message = "Unknown";
+        }
+    right:
+      title: "Switch (Before Java 12)"
+      language: "java"
+      caption: "Fall-through by default, break required to stop execution"
+      code: |
+        int status = 2;
+        String message;
+
+        switch (status) {
+            case 1:
+                message = "Pending";
+                break;
+            case 2:
+                message = "Approved";
+                break;
+            case 3:
+                message = "Rejected";
+                break;
+            default:
+                message = "Unknown";
+                break;
+        }
+
+  - type: "section"
+    title: "Java 12: First Preview (JEP 325)"
+    subtitle: "Switch expressions + arrow syntax"
+    bullets:
+      - "Switch can now be an expression, returns a value, assignable to a variable"
+      - "Arrow syntax (->) eliminates fall-through, no break needed"
+      - "Multiple case labels"
+      - "break value; reused to return from a block, caused confusion"
+    note: "Preview in Java 12: opt-in with --enable-preview"
+
+  - type: "code-compare"
+    title: "Java 12: Arrow vs Colon form"
+    left:
+      title: "Arrow form (new)"
+      language: "java"
+      caption: "No fall-through, no break each case is isolated"
+      code: |
+        String result = switch (day) {
+            case MONDAY, FRIDAY, SUNDAY -> "Weekend";
+            case TUESDAY               -> "Tuesday";
+            default                    -> "Midweek";
+        };
+    right:
+      title: "Colon form + break value (Java 12)"
+      language: "java"
+      caption: "break reused to return a value confusing alongside loop break"
+      code: |
+        int numLetters = switch (day) {
+            case MONDAY, FRIDAY, SUNDAY: break 6;
+            case TUESDAY:               break 7;
+            case THURSDAY, SATURDAY:    break 8;
+            default:                    break 9;
+        };
+
+  - type: "section"
+    title: "Java 13: Second Preview (JEP 354)"
+    subtitle: "yield replaces break for returning values"
+    bullets:
+      - "break had two jobs: exit a loop and return a value from switch ambiguous"
+      - "yield introduced as a dedicated keyword to return a value from a switch block"
+      - "Arrow syntax (->) unchanged, still the preferred style"
+      - "break value; removed from switch expressions"
+    note: "yield only means one thing: return this value from this switch expression"
+
+  - type: "code-compare"
+    title: "Java 12 break vs Java 13 yield"
+    left:
+      title: "Java 12: break as value"
+      language: "java"
+      caption: "break repurposed to return a value, confusing alongside loop break"
+      code: |
+        int numLetters = switch (day) {
+            case MONDAY, FRIDAY, SUNDAY: break 6;
+            case TUESDAY:               break 7;
+            default: {
+                int len = day.toString().length();
+                break len; // Java 12 only
+            }
+        };
+    right:
+      title: "Java 13: yield keyword"
+      language: "java"
+      caption: "yield is unambiguous, it only means: return this value"
+      code: |
+        int numLetters = switch (day) {
+            case MONDAY, FRIDAY, SUNDAY -> 6;
+            case TUESDAY               -> 7;
+            default -> {
+                int len = day.toString().length();
+                yield len; // clear intent
+            }
+        };
+
+  - type: "section"
+    title: "Java 14: Final Release (JEP 361)"
+    subtitle: "Switch expressions become a standard, permanent feature"
+    bullets:
+      - "No --enable-preview flag required"
+      - "No further syntax changes from Java 13 preview"
+      - "yield is now a standard part of the language"
+      - "Foundation for Pattern Matching for switch (Java 17+)"
+    note: "First major step in modernizing switch, more to come with sealed classes and patterns"
+
+  - type: "two-column"
+    title: "Switch: Java 12 Preview → Java 14 Final"
+    left:
+      heading: "Java 12–13 (Preview)"
+      bullets:
+        - "Java 12: arrow syntax + switch expressions (JEP 325)"
+        - "Java 12: break value to return from a block"
+        - "Java 13: yield replaces break value (JEP 354)"
+        - "Opt-in with --enable-preview both versions"
+    right:
+      heading: "Java 14 (Final — JEP 361)"
+      bullets:
+        - "Standard feature, no flag required"
+        - "Arrow (->), no fall-through, no break"
+        - "yield, returns value from a colon-style block"
+        - "Must be exhaustive: all cases or default required"

@@ -1,0 +1,109 @@
+slides:
+  - type: "section"
+    title: "Record"
+    subtitle: "From Java 14 Preview to Final in Java 16"
+
+  - type: "section"
+    title: "Why Do We Need Records?"
+    subtitle: "Java classes for data were painfully verbose"
+    bullets:
+      - "A simple 2-field data class requires 30+ lines of boilerplate"
+      - "constructor, getters, equals(), hashCode(), toString(), all manual"
+      - "Any field change means updating every method by hand"
+    note: "Records exist to solve one problem: stop writing boilerplate for data carriers"
+
+  - type: "code-compare"
+    title: "POJO vs Record"
+    left:
+      title: "Traditional class: 30+ lines"
+      language: "java"
+      caption: "Every field change forces you to update constructor, getters, equals, hashCode, toString"
+      code: |
+        public final class User {
+            private final String name;
+            private final int age;
+
+            public User(String name, int age) {
+                this.name = name;
+                this.age = age;
+            }
+
+            public String getName() { return name; }
+            public int getAge()     { return age;  }
+
+            @Override public boolean equals(Object o) { ... }
+            @Override public int hashCode()           { ... }
+            @Override public String toString()        { ... }
+        }
+    right:
+      title: "Record: 1 line"
+      language: "java"
+      caption: "Compiler generates constructor, accessors, equals, hashCode, toString automatically"
+      code: |
+        public record User(String name, int age) {}
+
+  - type: "section"
+    title: "Java 14: First Preview (JEP 359)"
+    subtitle: "Records introduced as a preview feature"
+    bullets:
+      - "Fields are implicitly private and final, immutable by design"
+      - "Compiler auto-generates equals(), hashCode(), toString(), accessors"
+      - "Cannot extend other classes (implicitly extends java.lang.Record)"
+      - "Cannot be abstract, native methods forbidden"
+    note: "Preview: must opt-in with --enable-preview to use it"
+
+  - type: "code"
+    title: "Java 14, Record Syntax"
+    language: "java"
+    code: |
+      public record Point(int x, int y) { }
+
+      // Usage
+      var p = new Point(3, 5);
+      System.out.println(p.x());       // accessor: 3
+      System.out.println(p.y());       // accessor: 5
+      System.out.println(p);           // toString: Point[x=3, y=5]
+
+      var p2 = new Point(3, 5);
+      System.out.println(p.equals(p2)); // equals: true
+    caption: "Accessor methods use the field name directly, x() not getX()"
+
+  - type: "section"
+    title: "Java 15: Second Preview (JEP 384)"
+    subtitle: "Refinements based on community feedback"
+    bullets:
+      - "Local records can now be declared inside a method"
+      - "Annotation propagation clarified: annotations apply to field, parameter, and accessor"
+      - "Native methods restriction removed, better interoperability"
+    note: "No syntax changes just fixing edge cases before finalizing"
+
+  - type: "code"
+    title: "Java 15: Local Records"
+    language: "java"
+    code: |
+      void process() {
+          // Record declared locally inside a method
+          record MerchantInfo(String name, int sales) {}
+
+          var info = new MerchantInfo("Amazon", 1000);
+          System.out.println(info);
+          // Output: MerchantInfo[name=Amazon, sales=1000]
+      }
+    caption: "Local records model intermediate data transformations without polluting the class scope"
+
+  - type: "two-column"
+    title: "Records: Java 14 Preview → Java 16 Final"
+    left:
+      heading: "Java 14–15 (Preview)"
+      bullets:
+        - "Opt-in with --enable-preview"
+        - "Java 14: initial syntax, no local records"
+        - "Java 15: local records + annotation fixes"
+        - "Native methods restriction lifted in Java 15"
+    right:
+      heading: "Java 16 (Final JEP 395)"
+      bullets:
+        - "Standard feature, no flag required"
+        - "API and semantics locked, production-ready"
+        - "Inner classes can now define static members"
+        - "Full annotation propagation on components"

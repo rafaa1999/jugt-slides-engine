@@ -1,0 +1,9 @@
+slides:
+  - type: "agenda"
+    title: "Java 12–17 Agenda"
+    items:
+      - "Switch"
+      - "Record"
+      - "Sealed Class"
+      - "Pattern Matching"
+      - "Text Block"

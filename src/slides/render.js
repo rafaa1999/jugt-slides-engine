@@ -55,17 +55,15 @@ function buildSpeakerGrid(talkData) {
     for (const p of presenters) {
         const card = el("div", "speaker");
 
-        const photoWrap = el("div", "speaker__photo");
+        let photoWrap = null;
         if (isNonEmptyStr(p.photo)) {
+            photoWrap = el("div", "speaker__photo");
             const img = el("img", "speaker__img", { src: p.photo, alt: safeText(p.name) });
             img.onerror = () => {
                 photoWrap.classList.add("speaker__photo--placeholder");
                 photoWrap.innerHTML = `<div class="ph">No photo</div>`;
             };
             photoWrap.appendChild(img);
-        } else {
-            photoWrap.classList.add("speaker__photo--placeholder");
-            photoWrap.innerHTML = `<div class="ph">No photo</div>`;
         }
 
         const meta = el("div", "speaker__metaWrap");
@@ -86,7 +84,7 @@ function buildSpeakerGrid(talkData) {
         meta.appendChild(role);
         if (socials.childNodes.length) meta.appendChild(socials);
 
-        card.appendChild(photoWrap);
+        if (photoWrap) card.appendChild(photoWrap);
         card.appendChild(meta);
         grid.appendChild(card);
     }
@@ -114,7 +112,7 @@ function buildTitleSlide(slide, talkData) {
     const body = el("div", "slide-body");
 
     // java signature pill
-    body.appendChild(el("div", "pill", { text: `CAFEBABE • ${safeText(talkData?.meta?.event || "JUGT")}` }));
+    body.appendChild(el("div", "pill", { text: ` ${safeText(talkData?.meta?.event || "JUGT")}` }));
 
     body.appendChild(el("h1", "h1", { text: safeText(slide.title || talkData?.meta?.title || "Untitled Talk") }));
     if (isNonEmptyStr(slide.subtitle)) body.appendChild(el("p", "sub sub--lg", { text: slide.subtitle }));
@@ -144,6 +142,20 @@ function buildSectionSlide(slide) {
     const shell = el("div", "slide-body");
     shell.appendChild(el("div", "section-badge", { text: safeText(slide.subtitle || "Module") }));
     shell.appendChild(el("h2", "h2 h2--xl", { text: safeText(slide.title || "Section") }));
+
+    const bullets = Array.isArray(slide.bullets) ? slide.bullets : [];
+    if (bullets.length > 0) {
+        const ul = el("ul", "section-bullets");
+        for (const b of bullets) {
+            ul.appendChild(el("li", "section-bullet", { text: safeText(b) }));
+        }
+        shell.appendChild(ul);
+    }
+
+    if (isNonEmptyStr(slide.note)) {
+        shell.appendChild(el("p", "section-note", { text: slide.note }));
+    }
+
     return wrapSlide(shell, "section");
 }
 
@@ -180,7 +192,7 @@ function buildTwoColumnSlide(slide) {
 }
 
 function buildCodeSlide(slide) {
-    const pre = el("pre", "codeframe");
+    const pre = el("pre", slide.compact ? "codeframe codeframe--compact" : "codeframe");
     const code = el("code", "", { text: safeText(slide.code || "") });
     if (isNonEmptyStr(slide.language)) code.className = `language-${slide.language}`;
     pre.appendChild(code);
@@ -193,6 +205,40 @@ function buildCodeSlide(slide) {
     });
 
     return wrapSlide(shell, "code");
+}
+
+function buildCodeCompareSlide(slide) {
+    const grid = el("div", "codecompare");
+
+    for (const side of ["left", "right"]) {
+        const col = slide[side] || {};
+        const col_el = el("div", "codecompare__col");
+
+        if (isNonEmptyStr(col.title)) {
+            col_el.appendChild(el("div", "codecompare__label", { text: col.title }));
+        }
+
+        const pre = el("pre", "codeframe codeframe--compact");
+        const code = el("code", "", { text: safeText(col.code || "") });
+        if (isNonEmptyStr(col.language)) code.className = `language-${col.language}`;
+        pre.appendChild(code);
+        col_el.appendChild(pre);
+
+        if (isNonEmptyStr(col.caption)) {
+            col_el.appendChild(el("p", "sub", { text: col.caption }));
+        }
+
+        grid.appendChild(col_el);
+    }
+
+    const shell = slideShell({
+        kicker: slide.kicker || defaultKickerForType("code"),
+        title: safeText(slide.title || ""),
+        subtitle: slide.subtitle || "",
+        body: grid
+    });
+
+    return wrapSlide(shell, "code-compare");
 }
 
 function buildImageSlide(slide) {
@@ -348,6 +394,7 @@ export function buildSlides(talkData) {
         else if (type === "section") section = buildSectionSlide(slide);
         else if (type === "two-column") section = buildTwoColumnSlide(slide);
         else if (type === "code") section = buildCodeSlide(slide);
+        else if (type === "code-compare") section = buildCodeCompareSlide(slide);
         else if (type === "image") section = buildImageSlide(slide);
         else if (type === "video") section = buildVideoSlide(slide);
         else if (type === "qr") section = buildQrSlide(slide);

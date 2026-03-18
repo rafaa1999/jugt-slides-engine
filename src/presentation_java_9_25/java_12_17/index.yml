@@ -1,0 +1,7 @@
+slides:
+  - $include: "content/agenda.yml"
+  - $include: "content/switch.yml"
+  - $include: "content/record.yml"
+  - $include: "content/seald.yml"
+  - $include: "content/pattern_matching.yml"
+  - $include: "content/text_bloc.yml"
