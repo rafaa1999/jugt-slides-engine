@@ -7,5 +7,6 @@ slides:
   - $include: "content/pattern_matching_for_switch.yml"
   - $include: "content/record_patterns.yml"
   - $include: "content/sequenced_collections.yml"
+  - $include: "content/sequenced_collection_diagram.yml"
   - $include: "content/utf-8.yml"
   - $include: "content/simple_web_server.yml"
