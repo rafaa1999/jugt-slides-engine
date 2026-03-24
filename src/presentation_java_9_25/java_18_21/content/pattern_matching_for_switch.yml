@@ -1,0 +1,38 @@
+slides:
+  - type: "section"
+    title: "Pattern matching for switch"
+    subtitle: "Match the type and cast in one shot (Preview JDK 17 → Final JDK 21)"
+    note: "Before JDK 21, inspecting a type inside a switch was impossible. You had to fall back to ugly if-else instanceof chains, and still cast manually after each check."
+
+  - type: "code-compare"
+    title: "Before and after Pattern Matching for switch"
+    left:
+      title: "Before"
+      language: "java"
+      caption: "Old way: check type, then cast manually every time"
+      code: |
+        static String describe(Object obj) {
+          if (obj instanceof Integer i) {
+            return "Integer: " + i;
+          } else if (obj instanceof String s) {
+             return "String of length " + s.length();
+          } else if (obj instanceof Double d && d > 0) {
+             return "Positive double: " + d;
+          } else {
+              return "Unknown";
+          }
+        }
+    right:
+      title: "After"
+      language: "java"
+      caption: "New way: switch does type check + cast + guard all at once"
+      code: |
+        static String describe(Object obj) {
+          return switch (obj) {
+            case Integer i       -> "Integer: " + i;
+            case String s        -> "String of length " + s.length();
+            case Double d when d > 0 -> "Positive double: " + d;  // guard with 'when'
+            case null            -> "null value";
+            default              -> "Unknown";
+          };
+        }

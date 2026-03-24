@@ -1,0 +1,38 @@
+slides:
+  - type: "section"
+    title: "Scoped value"
+    subtitle: "From Java 20 Incubator to Final in Java 25"
+    note: "Scoped values carry the context"
+
+  - type: "code"
+    title: "Scoped value in action"
+    language: "java"
+    code: |
+      // Instead of passing userId through every method signature,
+      you bind it once to a scope and any code running within that scope can read it.
+      It's immutable and auto-cleaned up.
+      
+      private static final ScopedValue<String> USER = ScopedValue.newInstance();
+      // Bind once at the entry point
+      ScopedValue.where(USER, "alice").run(() -> {
+        processOrder();    // can call USER.get() → "alice"
+        sendNotification();// same — no need to pass it around
+      });
+      // USER is gone automatically after run() exits
+
+  - type: "code"
+    title: "How they work together"
+    language: "java"
+    code: |
+      ScopedValue.where(CURRENT_USER, authenticatedUser).run(() -> {
+        // Scoped Value carries the user context automatically
+        
+        try (var scope = StructuredTaskScope.open()) {
+          // Structured Concurrency manages the task lifecycle
+          var orders  = scope.fork(() -> fetchOrders());   // Virtual Thread
+          var profile = scope.fork(() -> fetchProfile());  // Virtual Thread
+          scope.join();
+          render(orders.get(), profile.get());
+        }
+      });
+    note: "Clean, readable, and scales to millions of concurrent requests. That's the Project Loom promise."
