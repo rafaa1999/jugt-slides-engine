@@ -1,0 +1,31 @@
+slides:
+  - type: "section"
+    title: "Structured concurrency"
+    subtitle: "From Java 19 and it's still in the preview phase till now (5th preview)"
+    note: "A way to organize concurrent tasks so they behave like a single unit of work"
+
+  - type: "code-compare"
+    title: "Before and after Structured concurrency"
+    left:
+      title: "Before"
+      language: "java"
+      caption: "Chaos and resource wasting"
+      code: |
+        // Who cancels the other task if one fails?
+        var future1 = executor.submit(() -> fetchUser(id));
+        var future2 = executor.submit(() -> fetchOrders(id));
+        // If fetchUser throws, fetchOrders keeps running... 
+
+    right:
+      title: "After"
+      language: "java"
+      caption: "All subtasks live and die within their scope"
+      code: |
+        // Clean, bounded lifecycle
+        try (var scope = StructuredTaskScope.open()) {
+          var user   = scope.fork(() -> fetchUser(id));
+          var orders = scope.fork(() -> fetchOrders(id));
+          scope.join();           // Synchronization point → wait for both
+          // If either fails → scope cancels the other automatically 
+          return new Response(user.get(), orders.get());
+        }

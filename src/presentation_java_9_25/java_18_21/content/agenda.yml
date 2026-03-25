@@ -1,0 +1,13 @@
+slides:
+  - type: "agenda"
+    title: "Java 18–21 Agenda"
+    items:
+      - "Project Loom"
+      - "Virtual threads"
+      - "Structure Concurrency"
+      - "Scoped Value"
+      - "Pattern Matching for switch"
+      - "Record Patterns"
+      - "Sequenced Collections"
+      - "UTF-8 by default"
+      - "Simple Web Server"

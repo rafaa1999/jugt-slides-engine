@@ -36,7 +36,7 @@ sponsors:
 slides:
   - type: "title"
     title: "Java Evolution"
-    subtitle: "Java 19 - 25"
+    subtitle: "Java 9 - 25"
     showPresenters: true
     note: ""
 
@@ -50,6 +50,9 @@ slides:
 
   # ----------------------- Java 12–17 -----------------------
   - $include: "src/presentation_java_9_25/java_12_17/index.yml"
+
+  # ----------------------- Java 18–21 -----------------------
+  - $include: "src/presentation_java_9_25/java_18_21/index.yml"
 
   - type: "section"
     title: "Join JUGT"
