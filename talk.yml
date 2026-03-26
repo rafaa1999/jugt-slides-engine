@@ -51,6 +51,9 @@ slides:
   # ----------------------- Java 12–17 -----------------------
   - $include: "src/presentation_java_9_25/java_12_17/index.yml"
 
+  # ----------------------- Java 22–25 -----------------------
+  - $include: "src/presentation_java_9_25/java_22_25/index.yml"
+
   - type: "section"
     title: "Join JUGT"
     subtitle: "Grow the Java community"

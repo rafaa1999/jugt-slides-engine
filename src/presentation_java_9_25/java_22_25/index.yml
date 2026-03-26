@@ -1,0 +1,15 @@
+slides:
+  - type: "agenda"
+    title: "Java Evolution 22–25"
+    items:
+      - "Project Panama: Foreign Function & Memory"
+      - "Concurrency: Virtual Threads Optimization"
+      - "Project Amber: Modern Syntax"
+      - "Project Lilliput: Runtime & Startup"
+      - "Developer Experience: Markdown & Bytecode"
+
+  - $include: "content/native_interop.yml"
+  - $include: "content/concurrency.yml"
+  - $include: "content/amber_project.yml"
+  - $include: "content/performance.yml"
+  - $include: "content/dev_experience.yml"

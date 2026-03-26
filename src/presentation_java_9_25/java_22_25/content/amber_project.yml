@@ -1,0 +1,127 @@
+slides:
+  - type: "section"
+    title: "Project Amber"
+    subtitle: "Cleaning Up the Java Language"
+
+  - type: "two-column"
+    title: "Why Project Amber?"
+    left:
+        heading: "The 'Old' Java"
+        bullets:
+            - "Code was too long and repetitive"
+            - "Like writing a 10-page contract for a simple task"
+    right:
+        heading: "The Goal"
+        bullets:
+            - "Remove 'Boilerplate' (useless code)"
+            - "Make Java as clean as modern languages"
+
+  - type: "two-column"
+    title: "The String Problem"
+    left:
+        heading: "The '+' Nightmare"
+        bullets:
+            - "Mixing text and variables with '+' is messy"
+            - "Hard to read and easy to break"
+    right:
+        heading: "The Maintenance Cost"
+        bullets:
+            - "Complex text takes too much time to write"
+            - "Small errors are hard to find"
+
+
+  - type: "code-compare"
+    title: "Before vs After: String Templates"
+    left:
+      title: "Concatenation"
+      language: "java"
+      code: |
+        // Manual concatenation
+        String message = "Hello " + name + ", welcome!";
+        // Multiple parts → less readable and error-prone
+    right:
+      title: "String Templates"
+      language: "java"
+      code: |
+        // STR is a template processor
+        // \{name} injects the variable directly into the string
+        String message = STR."Hello \{name}, welcome!";
+        // Cleaner, safer, and easier to maintain
+
+
+#  - type: "section"
+#    title: "Pattern Matching"
+#    subtitle: "Simplified Type Checking"
+#
+#  - type: "two-column"
+#    title: "The 'Double Check' Problem"
+#    left:
+#        heading: "The Old Way"
+#        bullets:
+#          - "Like showing your ID twice at the same gate"
+#          - "You check the type, then you manually cast it"
+#    right:
+#        heading: "Why it's Bad"
+#        bullets:
+#          - "Repetitive and boring to write"
+#          - "More lines of code = more places for bugs"
+#
+#  - type: "code"
+#    title: "Before vs After: Pattern Matching"
+#    language: "java"
+#    code: |
+#      // OLD: Check AND then manual cast
+#      if (obj instanceof String) {
+#      String s = (String) obj;
+#            System.out.println(s.toUpperCase());
+#        }
+#
+#        // NEW: Check and use immediately
+#        if (obj instanceof String s) {
+#            System.out.println(s.toUpperCase());
+#        }
+#      caption: "Pattern matching combines checking and casting into one single, safe step."
+#
+#  - type: "two-column"
+#    title: "Key Benefits"
+#    left:
+#        heading: "Clean & Safe"
+#        bullets:
+#          - "Removes useless code (Boilerplate)"
+#          - "The compiler does the hard work for you"
+#    right:
+#        heading: "Real World Use"
+#        bullets:
+#          - "Perfect for processing complex data"
+#          - "Makes your APIs much easier to read"
+#
+#
+#  - type: "two-column"
+#    title: "Real Use Cases: Pattern Matching"
+#    subtitle: "Where it helps the most in modern Java"
+#    left:
+#        heading: "Data Processing"
+#        bullets:
+#          - "Quickly identify different types of messages"
+#          - "Great for handling JSON or database results"
+#          - "Perfect for 'Type-Safe' data extraction"
+#    right:
+#        heading: "Backend Systems"
+#        bullets:
+#          - "Simplify complex 'if-else' logic"
+#          - "Write code that looks like a story, not a manual"
+#          - "Easier to maintain and debug"
+#
+#  - type: "code"
+#    title: "Practical Example: Message Handling"
+#    language: "java"
+#    code: |
+#        // Handling different data types in one clean block
+#        public void process(Object message) {
+#            if (message instanceof String s) {
+#                System.out.println("Text: " + s.toLowerCase());
+#            } else if (message instanceof Integer i) {
+#                System.out.println("Number: " + (i * 2));
+#            }
+#        }
+#    caption: "In modern Java, we focus on what the data IS, not how to cast it."

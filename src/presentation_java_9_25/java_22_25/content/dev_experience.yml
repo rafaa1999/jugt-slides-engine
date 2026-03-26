@@ -1,0 +1,78 @@
+slides:
+  - type: "section"
+    title: "Developer Experience Improvements"
+    subtitle: "Making Java easier to read and write"
+
+  - type: "two-column"
+    title: "Documentation: HTML vs Markdown"
+    subtitle: "Modernizing Javadoc (Java 23)"
+    left:
+      heading: "The 'Old' Way (HTML)"
+      bullets:
+        - "Required ugly <b>, <ul>, and <li> tags"
+        - "Very hard to read while coding"
+        - "Writing felt like building a 90s website"
+    right:
+      heading: "The 'New' Way (Markdown)"
+      bullets:
+        - "Uses simple syntax (like GitHub/Discord)"
+        - "Clean and professional look"
+        - "Focus on content, not formatting"
+
+  - type: "code"
+    title: "Example: Modern Documentation (Java 23)"
+    language: "java"
+    code: |
+      /** * <b>Old Way</b>
+       * <ul><li>Hard to write</li></ul>
+       */
+      public void oldMethod() {}
+
+      /// ### New Way (Markdown)
+      /// - Simple and clean list
+      /// - **Bold text** is easy!
+      public void newMethod() {}
+    caption: "Markdown Javadoc (using ///) makes your code documentation look professional without the HTML mess."
+
+  - type: "two-column"
+    title: "Module Imports: Cleaning the Header"
+    subtitle: "Goodbye to long import lists"
+    left:
+      heading: "The 'Grocery List' Problem"
+      bullets:
+        - "Files start with 50+ lines of imports"
+        - "Hides the actual code logic"
+        - "Repetitive and boring to manage"
+    right:
+      heading: "The 'All-in-One' Solution"
+      bullets:
+        - "Import an entire module in one single line"
+        - "Keeps the top of your file clean"
+        - "Perfect for beginners and experts alike"
+
+  - type: "code"
+    title: "Before vs After: Module Imports"
+    language: "java"
+    code: |
+      // OLD: Importing everything one by one
+      import java.util.List;
+      import java.util.ArrayList;
+      import java.util.Map;
+      import java.util.stream.Collectors;
+
+      // NEW (Java 23): One line for everything essential
+      import module java.base;
+    caption: "Importing a module gives you access to all its classes instantly, keeping your file header clean."
+
+  - type: "two-column"
+    title: "Key Benefits: Developer Happiness"
+    left:
+      heading: "Faster Writing"
+      bullets:
+        - "Less time spent on 'Boilerplate' code"
+        - "Instant documentation formatting"
+    right:
+      heading: "Better Reading"
+      bullets:
+        - "Clean files are easier to maintain"
+        - "New developers understand the code faster"

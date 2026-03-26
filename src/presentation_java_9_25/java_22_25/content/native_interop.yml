@@ -1,0 +1,59 @@
+slides:
+  - type: "section"
+    title: "Foreign Function & Memory API"
+    subtitle: "Connecting Java with Native Code"
+
+  - type: "two-column"
+    title: "The Native Bridge: JNI vs. Modern API"
+    subtitle: "Accessing C or C++ libraries safely"
+    left:
+      heading: "The Old Bridge (JNI)"
+      bullets:
+        - "Like a dangerous, complex border crossing"
+        - "Requires writing manual C code (Boilerplate)"
+        - "Very slow to develop and easy to crash"
+    right:
+      heading: "The New Bridge (FFM API)"
+      bullets:
+        - "Like a modern, high-speed highway"
+        - "Access native libraries directly from Java"
+        - "Safe and managed by the JVM"
+
+  - type: "code-compare"
+    title: "JNI vs Modern API"
+    left:
+      title: "JNI (Complex & Unsafe)"
+      language: "java"
+      code: |
+        public class NativeExample {
+            static {
+                System.loadLibrary("nativeLib");
+            }
+            // Need native method in C
+            public native int sum(int a, int b);
+        }
+    right:
+      title: "Foreign API (Simple & Safe)"
+      language: "java"
+      code: |
+        import java.lang.foreign.*;
+
+        // Direct access to native linker
+        Linker linker = Linker.nativeLinker();
+
+        // Call functions without C boilerplate
+        // Faster, safer, and 100% Java
+    caption: "JNI requires manual integration with external C code, while the Foreign API provides a direct and safer way to interact with native libraries."
+
+  - type: "two-column"
+    title: "Key Benefits: Performance & Safety"
+    left:
+      heading: "Better Performance"
+      bullets:
+        - "Zero overhead for calling native code"
+        - "Efficient memory management outside the Heap"
+    right:
+      heading: "Higher Safety"
+      bullets:
+        - "No more random 'Segment Fault' crashes"
+        - "The JVM protects the memory from corruption"
