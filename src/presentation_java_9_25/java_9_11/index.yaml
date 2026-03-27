@@ -1,9 +1,0 @@
-slides:
-  - $include: "content/intro.yaml"
-  - $include: "content/modularity.yaml"
-  - $include: "content/jshel.yaml"
-  - $include: "content/collection_factory.yaml"
-  - $include: "content/var.yaml"
-  - $include: "content/http_client.yaml"
-  - $include: "content/string_methods.yaml"
-  - $include: "content/single_file.yaml"

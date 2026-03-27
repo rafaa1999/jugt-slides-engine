@@ -53,7 +53,7 @@ slides:
   - $include: "src/presentation_java_9_25/introduction.yml"
 
   # ----------------------- Java 9-11 -----------------------
-  - $include: "src/presentation_java_9_25/java_9_11/index.yaml"
+  - $include: "src/presentation_java_9_25/java_9_11/index.yml"
 
   # ----------------------- Java 12–17 -----------------------
   - $include: "src/presentation_java_9_25/java_12_17/index.yml"

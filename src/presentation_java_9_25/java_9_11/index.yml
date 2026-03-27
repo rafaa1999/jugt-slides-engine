@@ -1,0 +1,9 @@
+slides:
+  - $include: "content/intro.yml"
+  - $include: "content/modularity.yml"
+  - $include: "content/jshel.yml"
+  - $include: "content/collection_factory.yml"
+  - $include: "content/var.yml"
+  - $include: "content/http_client.yml"
+  - $include: "content/string_methods.yml"
+  - $include: "content/single_file.yml"
