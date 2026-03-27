@@ -1,16 +1,14 @@
 slides:
   - type: "section"
-    title: "Sealed Class"
+    title: "Sealed Classes"
     subtitle: "From Java 15 Preview to Final in Java 17"
 
   - type: "section"
     title: "Why Do We Need Sealed Classes?"
     subtitle: "Open inheritance hierarchies are hard to reason about"
     bullets:
-      - "Any class could extend yours, no way to restrict it"
-      - "Compiler cannot verify exhaustiveness in switch/pattern matching"
-      - "Algebraic data types (like enums for objects) had no clean Java equivalent"
-    note: "Sealed classes give the compiler a complete, closed list of permitted subtypes"
+      - "Any class could extend yours, making behavior unpredictable"
+    note: "Sealed classes allow the compiler to know the complete, closed set of permitted subtypes"
 
   - type: "code"
     title: "Java 15: Sealed Class Syntax"
@@ -19,38 +17,36 @@ slides:
       public sealed class Shape
           permits Circle, Rectangle, Square { }
 
-      // Every permitted subclass must declare one of:
-      final class Circle    extends Shape { }  // no further extension
-      final class Rectangle extends Shape { }  // no further extension
-      non-sealed class Square extends Shape { }  // open again
-    caption: "sealed permits locks the hierarchy, each subclass must be final, sealed, or non-sealed"
+      // Each permitted subclass must declare one of:
+      final class Circle    extends Shape { }  // cannot be extended further
+      final class Rectangle extends Shape { }  // cannot be extended further
+      non-sealed class Square extends Shape { }  // open for extension again
+    caption: "sealed + permits locks the hierarchy; subclasses must be final, sealed, or non-sealed"
 
   - type: "section"
     title: "Java 15: First Preview (JEP 360)"
     subtitle: "Closed hierarchies with explicit subtype control"
     bullets:
-      - "New contextual keywords: sealed, permits, non-sealed"
+      - "Introduced keywords: sealed, permits, non-sealed"
       - "Sealed class and its subclasses must be in the same package or module"
       - "Every permitted subclass must explicitly extend the sealed class"
-      - "permits clause is mandatory, all subclasses listed explicitly"
-    note: "Preview: opt-in required with --enable-preview"
+      - "permits clause is mandatory, all subclasses must be listed explicitly"
+    note: "Preview: opt-in required using --enable-preview"
 
   - type: "section"
     title: "Java 16: Second Preview (JEP 397)"
-    subtitle: "Implicit permits + reflection API"
+    subtitle: "Implicit permits for same-file subclasses"
     bullets:
-      - "permits clause optional when subclasses are in the same .java file"
+      - "permits clause optional when all subclasses are in the same .java file"
       - "Compiler infers permitted subclasses automatically from the same compilation unit"
-      - "New reflection method: Class.getPermittedSubclasses()"
-      - "JVM class file updated with PermittedSubclasses attribute"
-    note: "Frameworks and libraries can now query sealed hierarchies via reflection"
+    note: "Frameworks and libraries can query sealed hierarchies via reflection"
 
   - type: "code-compare"
-    title: "Java 15 vs Java 16: permits clause"
+    title: "Java 15 vs Java 16: permits Clause"
     left:
       title: "Java 15: Explicit permits required"
       language: "java"
-      caption: "All subclasses must be listed, error if permits clause is missing"
+      caption: "All subclasses must be listed; compiler error if permits clause is missing"
       code: |
         public sealed class Shape
             permits Circle, Rectangle { }
@@ -60,7 +56,7 @@ slides:
     right:
       title: "Java 16: Implicit permits (same file)"
       language: "java"
-      caption: "Compiler infers permitted subclasses when declared in the same .java file"
+      caption: "Compiler infers permitted subclasses when they are declared in the same .java file"
       code: |
         // Inside Shape.java no permits clause needed
         public sealed class Shape { }
@@ -75,12 +71,10 @@ slides:
       bullets:
         - "Opt-in with --enable-preview"
         - "Java 15: explicit permits mandatory"
-        - "Java 16: implicit permits + reflection API"
-        - "JVM PermittedSubclasses attribute added"
+        - "Java 16: permits optional for same-file subclasses"
     right:
       heading: "Java 17 (Final — JEP 409)"
       bullets:
-        - "Standard feature, no flag required"
-        - "Syntax and rules from Java 16 unchanged"
-        - "Enables exhaustiveness checking in pattern matching"
-        - "Foundation for sealed interfaces + pattern switch (Java 21)"
+        - "Feature finalized, no preview flag required"
+        - "Syntax and rules same as Java 16"
+        - "Full compiler support for sealed hierarchies and reflection"
