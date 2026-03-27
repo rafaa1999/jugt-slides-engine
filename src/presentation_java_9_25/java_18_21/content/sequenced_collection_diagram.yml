@@ -1,0 +1,5 @@
+slides:
+  - type: "image"
+    title: "Sequenced Collection Diagram"
+    src: "/assets/sequenced-collection.png"
+    alt: "Sequenced Collection Diagram"

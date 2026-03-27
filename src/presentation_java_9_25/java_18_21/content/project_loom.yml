@@ -1,0 +1,28 @@
+slides:
+  - type: "section"
+    title: "Project Loom"
+    subtitle: "From Java 14 Preview to Final in Java 17"
+
+  - type: "section"
+    title: "What is concurrency?"
+    subtitle: "Concurrency is the ability of a program to handle multiple tasks at the same time."
+
+  - type: "section"
+    title: "Concurrency before Project loom"
+    subtitle: "Java relied only on Platform Threads (also called OS threads)"
+    bullets:
+      - "1 Java thread = 1 OS thread"
+      - "Scheduled by the OS"
+      - "Expensive to create"
+      - "Limited in number (thousands)"
+      - "Blocking I/O blocks the OS thread"
+
+  - type: "section"
+    title: "Project Loom"
+    subtitle: "Project Loom was started to redesign how concurrency works in Java"
+    bullets:
+      - "Virtual threads (Final in java 21)"
+      - "Structured Concurrency (Still preview)"
+      - "Scoped Value (Final in Java 25)"
+    note: "Its main goal is to make it easier to write and maintain high-throughput concurrent applications"
+

@@ -1,0 +1,55 @@
+slides:
+  - type: "section"
+    title: "Record Patterns"
+    subtitle: "Unpack a record's fields right in the pattern (Preview JDK 19 → Final JDK 21)"
+    note: "Records are Java's compact data carriers. Before JDK 21, even after matching a type, you still had to call each accessor manually."
+
+  - type: "code-compare"
+    title: "Before and after Record Patterns"
+    left:
+      title: "Before"
+      language: "java"
+      caption: "Match then extract by hand"
+      code: |
+        record Point(int x, int y) {}
+        record Circle(Point center, double radius) {}
+
+        static void printInfo(Object shape) {
+          if (shape instanceof Circle c) {  // match type...
+            Point p = c.center();  // ...then extract manually
+            double r = c.radius();   // radius
+            System.out.println("Circle at " + x + "," + y + " r=" + r);
+          }
+        }
+    right:
+      title: "After"
+      language: "java"
+      caption: "x, y, r are all bound directly → zero manual extraction! Checks the type, extracts all the fields, and binds them as variables"
+      code: |
+        static void printInfo(Object shape) {
+          if (shape instanceof Circle(Point(int x, int y), double r)) {
+            System.out.println("Circle at " + x + "," + y + " r=" + r);
+          }
+        }
+
+  - type: "code"
+    title: "The real power: combine with switch"
+    language: "java"
+    caption: "Both features were designed to work together. Here's a real-world example using sealed interfaces:"
+    code: |
+      sealed interface Shape permits Circle, Triangle {}
+      record Circle(Point center, double radius) implements Shape {}
+      record Triangle(Point a, Point b, Point c) implements Shape {}
+
+      // Switch + type pattern + record deconstruction, all at once
+      static double area(Shape shape) {
+        return switch (shape) {
+          case Circle(_, double r)                    -> Math.PI * r * r;
+          case Triangle(Point a, Point b, Point c)    -> triangleArea(a, b, c);
+        };
+      // Compiler knows all cases are covered (sealed!) → no default needed
+      }
+
+    note: "Notice the _ (underscore). It means I don't need this field.\n Sealed interfaces make your switch exhaustive and safe → No default needed"
+
+

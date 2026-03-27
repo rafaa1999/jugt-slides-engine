@@ -1,0 +1,44 @@
+slides:
+  - type: "section"
+    title: "Virtual threads"
+    subtitle: "From Java 19 Preview to Final in Java 21"
+    bullets:
+      - "Many virtual threads run on few OS threads"
+      - "Scheduled by the JVM"
+      - "Very cheap to create"
+      - "Can scale to millions"
+      - "Blocking I/O does not block the OS thread"
+    note: "A virtual thread is a lightweight, JVM-managed thread that runs on top of platform threads (carrier threads)."
+
+  - type: "code-compare"
+    title: "Creating Platform thread VS creating Virtual thread"
+    left:
+      title: "Platform thread"
+      language: "java"
+      caption: "Thread pool way is most common in real apps. We can also use Thread.ofPlatform()."
+      code: |
+        Thread thread = new Thread(() -> {
+          System.out.println("Platform thread running");
+        });
+        thread.start();
+        // Or using thread pool
+        ExecutorService executor = Executors.newFixedThreadPool(10);
+        executor.submit(() -> {
+            System.out.println("Task running in platform thread");
+        });
+
+        executor.shutdown();
+    right:
+      title: "Virtual thread"
+      language: "java"
+      caption: "Using Virtual Thread Executor is recommended. We can also use Thread.ofVirtual()."
+      code: |
+        Thread.startVirtualThread(() -> {
+          System.out.println("Virtual thread running");
+        });
+        // Or using Virtual Thread Executor
+        try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
+            executor.submit(() -> {
+              System.out.println("Task in virtual thread");
+          });
+        }

@@ -1,0 +1,113 @@
+slides:
+  - type: "section"
+    title: "Sequenced Collections"
+    subtitle: "Introduced in Java 21 and added as a standard feature immediately"
+    note: "Before JDK 21, getting the first or last element of a collection was inconsistent depending on which type you were using. There was no single, unified way to do it."
+
+  - type: "code"
+    title: "Before Sequenced Collections"
+    language: "java"
+    code: |
+      // Getting the FIRST element, four different ways for four types:
+        list.get(0);                          // List
+        deque.peekFirst();                    // Deque
+        sortedSet.first();                    // SortedSet
+        linkedHashSet.iterator().next();      // LinkedHashSet — really??
+      
+      // Getting the LAST element — even worse:
+        list.get(list.size() - 1);            // List — error-prone
+        deque.peekLast();                     // Deque
+        sortedSet.last();                     // SortedSet
+        // LinkedHashSet? You had to iterate the whole thing manually!
+      
+      // Reversing a list to iterate backwards:
+        var copy = new ArrayList<>(list);
+        Collections.reverse(copy);           // mutates, needs a copy first
+    note: "Every collection had a different API, and none of them agreed. JEP 431 fixed this by adding three new interfaces to the hierarchy."
+  - type: "code"
+    title: "SequencedCollection"
+    language: "java"
+    caption: "For any ordered collection with a defined first and last element"
+    code: |
+        // New unified API — works on List, Deque, LinkedHashSet, etc.
+        list.getFirst();          // replaces list.get(0)
+        list.getLast();           // replaces list.get(list.size() - 1)
+        list.addFirst("a");       // add at the front
+        list.addLast("z");        // add at the back
+        list.removeFirst();       // remove from front
+        list.removeLast();        // remove from back
+      
+        // The star feature: reversed() — a live view, not a copy
+        SequencedCollection<String> rev = list.reversed();
+        // Iterating rev iterates the original list backwards
+        // Modifying rev modifies the original — it's a view!
+        for (String s : list.reversed()) {
+          System.out.println(s);  // clean, readable, no copy needed
+        }
+  - type: "code"
+    title: "SequencedSet"
+    language: "java"
+    caption: "Same as SequencedCollection but for sets (no duplicates)."
+    note: "reversed() returns a SequencedSet"
+    code: |
+      LinkedHashSet<String> set = new LinkedHashSet<>(List.of("a", "b", "c"));
+      set.getFirst();  // "a"
+      set.getLast();   // "c"
+      
+      // Reversed view of a set — finally possible!
+      set.reversed().forEach(System.out::println); // c, b, a
+  - type: "code"
+    title: "SequencedMap"
+    language: "java"
+    caption: "Brings the same idea to maps. Get entries, keys, and values from either end:"
+    code: |
+      LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
+      map.put("one", 1);
+      map.put("two", 2);
+      map.put("three", 3);
+      
+      map.firstEntry();          // Map.Entry("one", 1)
+      map.lastEntry();           // Map.Entry("three", 3)
+      map.firstKey();            // "one"
+      map.lastKey();             // "three"
+      
+      // Reversed view of the map
+      map.reversed().forEach((k, v) ->
+        System.out.println(k + " = " + v)
+      ); // three=3, two=2, one=1
+
+  - type: "code-compare"
+    title: "Getting last element safely"
+    left:
+      title: "Before"
+      language: "java"
+      code: |
+        String last;
+        if (!list.isEmpty()) {
+          last = list.get(list.size() - 1);   
+            // verbose, index arithmetic
+        }
+    right:
+      title: "After"
+      language: "java"
+      code: |
+        String last = list.getLast(); // clean, throws NoSuchElementException if empty
+          // or safely:
+        Optional<String> last = list.isEmpty() 
+                ? Optional.empty()
+                : Optional.of(list.getLast());
+
+  - type: "code-compare"
+    title: "Processing a list in reverse"
+    left:
+      title: "Before"
+      language: "java"
+      code: |
+        List<String> reversed = new ArrayList<>(list);
+        Collections.reverse(reversed);
+        reversed.forEach(System.out::println);
+    right:
+      title: "After"
+      language: "java"
+      code: |
+        list.reversed().forEach(System:out::println);:

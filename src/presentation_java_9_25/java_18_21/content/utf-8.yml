@@ -1,0 +1,21 @@
+slides:
+  - type: "section"
+    title: "UTF-8 by default"
+    subtitle: "Same behavior everywhere, finally (Final at JDK 18)"
+    bullets:
+      - "Before JDK 18, Java picked its default charset from the operating system."
+      - "On Windows it used windows-1252"
+      - "On Linux UTF-8, on macOS UTF-8"
+    note: "Code that worked perfectly on your Linux dev machine would silently ruin Arabic, French, or Chinese text when deployed on Windows or vice versa"
+
+  - type: "code"
+    title: "UTF-8 by default"
+    language: "java"
+    code: |
+        // Before
+        // To be safe, you had to always specify explicitly, easy to forget
+        FileWriter fw = new FileWriter("output.txt", StandardCharsets.UTF_8);
+        // Now the default IS UTF-8 on every OS, no surprises
+      
+        // You can still override if needed
+        FileWriter fw = new FileWriter("output.txt", Charset.forName("windows-1252"));

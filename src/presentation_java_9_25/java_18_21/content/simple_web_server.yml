@@ -1,0 +1,19 @@
+slides:
+  - type: "section"
+    title: "Simple Web Server"
+    subtitle: "Final at JDK 18"
+    bullets:
+      - "Before JDK 18, Java had no built-in way to quickly serve static files"
+      - "Developers used python -m http.server 8080"
+      - "JDK 18 shipped its own equivalent, a minimal HTTP/1.1 file server you can start with one command, no code needed."
+
+  - type: "code"
+    title: "Simple Web Server"
+    language: "java"
+    caption: "From the terminal, zero code"
+    code: |
+      # Serve the current directory on port 8080
+      jwebserver
+      
+      # Serve a specific directory on a custom port
+      jwebserver -p 3000 -d /path/to/my/site

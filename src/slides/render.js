@@ -204,6 +204,10 @@ function buildCodeSlide(slide) {
         body: pre
     });
 
+    if (isNonEmptyStr(slide.note)) {
+        shell.appendChild(el("div", "code-note", { text: slide.note }));
+    }
+
     return wrapSlide(shell, "code");
 }
 
