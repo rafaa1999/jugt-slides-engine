@@ -1,5 +1,4 @@
 slides:
-  - $include: "content/intro.yml"
   - $include: "content/modularity.yml"
   - $include: "content/jshel.yml"
   - $include: "content/collection_factory.yml"

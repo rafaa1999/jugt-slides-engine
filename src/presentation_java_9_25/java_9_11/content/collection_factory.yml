@@ -1,35 +1,36 @@
-- type: "two-column"
-  title: "Collection Factory Methods: List.of(), Set.of(), Map.of()"
-  left:
-    heading: "Before Java 9"
-    bullets:
-      - "Verbose and awkward — required Arrays.asList() + Collections.unmodifiableList() or anonymous inner class hacks"
-      - "The old unmodifiable wrapper was a lie — someone with the underlying reference could still mutate it"
-  right:
-    heading: "Java 9+ (JEP 269)"
-    bullets:
-      - "Truly unmodifiable — not a wrapper, designed from scratch to be immutable"
-      - "Null elements are disallowed — passing null throws NullPointerException"
-      - "No guaranteed order for Set and Map — do not rely on insertion order"
-      - "Fixed-arg overloads up to 10 elements; use Map.ofEntries() for more"
+slides:
+  - type: "two-column"
+    title: "Collection Factory Methods: List.of(), Set.of(), Map.of()"
+    left:
+      heading: "Before Java 9"
+      bullets:
+        - "Verbose and awkward — required Arrays.asList() + Collections.unmodifiableList() or anonymous inner class hacks"
+        - "The old unmodifiable wrapper was a lie — someone with the underlying reference could still mutate it"
+    right:
+      heading: "Java 9+ (JEP 269)"
+      bullets:
+        - "Truly unmodifiable — not a wrapper, designed from scratch to be immutable"
+        - "Null elements are disallowed — passing null throws NullPointerException"
+        - "No guaranteed order for Set and Map — do not rely on insertion order"
+        - "Fixed-arg overloads up to 10 elements; use Map.ofEntries() for more"
 
-- type: "code"
-  title: "Collection Factory Methods — Before Java 9"
-  language: "java"
-  caption: "Before Java 9"
-  code: |
-    List<String> old = Collections.unmodifiableList(Arrays.asList("a", "b", "c"));
+  - type: "code"
+    title: "Collection Factory Methods — Before Java 9"
+    language: "java"
+    caption: "Before Java 9"
+    code: |
+      List<String> old = Collections.unmodifiableList(Arrays.asList("a", "b", "c"));
 
-- type: "code"
-  title: "Collection Factory Methods — Java 9+"
-  language: "java"
-  caption: "Java 9+"
-  code: |
-    List<String> list = List.of("a", "b", "c");
-    Set<String>  set  = Set.of("x", "y", "z");
-    Map<String, Integer> map = Map.of("one", 1, "two", 2);
+  - type: "code"
+    title: "Collection Factory Methods — Java 9+"
+    language: "java"
+    caption: "Java 9+"
+    code: |
+      List<String> list = List.of("a", "b", "c");
+      Set<String>  set  = Set.of("x", "y", "z");
+      Map<String, Integer> map = Map.of("one", 1, "two", 2);
 
-    // Map beyond 10 entries
-    Map<String, Integer> big = Map.ofEntries(
-        Map.entry("a", 1), Map.entry("b", 2)
-    );
+      // Map beyond 10 entries
+      Map<String, Integer> big = Map.ofEntries(
+          Map.entry("a", 1), Map.entry("b", 2)
+      );

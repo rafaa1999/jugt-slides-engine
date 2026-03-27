@@ -1,42 +1,43 @@
-- type: "section"
-  title: "Java 10 — March 2018"
-  subtitle: "Local-Variable Type Inference"
+slides:
+  - type: "section"
+    title: "Local-Variable Type Inference"
+    subtitle: "Java 10 — March 2018"
 
-- type: "two-column"
-  title: "Local Variable Type Inference: var"
-  left:
-    heading: "What It Is"
-    bullets:
-      - "JEP 286, authored by Brian Goetz — extends type inference to local variable declarations with initializers"
-      - "var is not a keyword — it is a reserved type name — code using var as a variable name still compiles"
-      - "Type is still statically inferred at compile time — this is not dynamic typing"
-  right:
-    heading: "Restrictions"
-    bullets:
-      - "Works on: local variables with initializers, enhanced for loop indexes, traditional for loop variables"
-      - "Does NOT work on: method parameters, return types, fields, constructor formals, catch blocks"
-      - "Cannot use with: null initializers, lambdas, method references, array initializers"
+  - type: "two-column"
+    title: "Local Variable Type Inference: var"
+    left:
+      heading: "What It Is"
+      bullets:
+        - "JEP 286, authored by Brian Goetz — extends type inference to local variable declarations with initializers"
+        - "var is not a keyword — it is a reserved type name — code using var as a variable name still compiles"
+        - "Type is still statically inferred at compile time — this is not dynamic typing"
+    right:
+      heading: "Restrictions"
+      bullets:
+        - "Works on: local variables with initializers, enhanced for loop indexes, traditional for loop variables"
+        - "Does NOT work on: method parameters, return types, fields, constructor formals, catch blocks"
+        - "Cannot use with: null initializers, lambdas, method references, array initializers"
 
-- type: "code"
-  title: "var — Before Java 10"
-  language: "java"
-  caption: "Before Java 10"
-  code: |
-    ArrayList<String> list = new ArrayList<String>();
-    Stream<String> stream = list.stream();
+  - type: "code"
+    title: "var — Before Java 10"
+    language: "java"
+    caption: "Before Java 10"
+    code: |
+      ArrayList<String> list = new ArrayList<String>();
+      Stream<String> stream = list.stream();
 
-- type: "code"
-  title: "var — Java 10+"
-  language: "java"
-  caption: "Java 10+"
-  code: |
-    var list   = new ArrayList<String>(); // infers ArrayList<String>
-    var stream = list.stream();           // infers Stream<String>
+  - type: "code"
+    title: "var — Java 10+"
+    language: "java"
+    caption: "Java 10+"
+    code: |
+      var list   = new ArrayList<String>(); // infers ArrayList<String>
+      var stream = list.stream();           // infers Stream<String>
 
-    // Works in for loops
-    for (var entry : map.entrySet()) { ... }
+      // Works in for loops
+      for (var entry : map.entrySet()) { ... }
 
-    // These DON'T work
-    var x;              // no initializer — ERROR
-    var f = () -> {};   // lambda needs explicit target type — ERROR
-    var g = null;       // null type — ERROR
+      // These DON'T work
+      var x;              // no initializer — ERROR
+      var f = () -> {};   // lambda needs explicit target type — ERROR
+      var g = null;       // null type — ERROR

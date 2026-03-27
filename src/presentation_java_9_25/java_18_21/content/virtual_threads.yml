@@ -33,12 +33,11 @@ slides:
       language: "java"
       caption: "Using Virtual Thread Executor is recommended. We can also use Thread.ofVirtual()."
       code: |
-        Thread.startVirtualThread(() -> {
-          System.out.println("Virtual thread running");
-        });
-        // Or using Virtual Thread Executor
-        try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
-            executor.submit(() -> {
-              System.out.println("Task in virtual thread");
-          });
-        }
+        // Option 1: Direct start
+          Thread.startVirtualThread(() -> {});
+        
+        // Option 2: Factory builder
+          Thread t = Thread.ofVirtual().start(runnable);
+        
+        // Option 3: With ExecutorService (one VT per task)
+          ExecutorService es = Executors.newVirtualThreadPerTaskExecutor();
