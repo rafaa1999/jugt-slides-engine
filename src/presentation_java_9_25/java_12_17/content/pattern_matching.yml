@@ -7,9 +7,9 @@ slides:
     title: "Why Do We Need Pattern Matching?"
     subtitle: "The check-and-cast pattern was verbose and error-prone"
     bullets:
-      - "instanceof check followed by an explicit cast, two lines doing one job"
-      - "Compiler already knows the type after instanceof, why cast again?"
-      - "Long chains of if-else instanceof are hard to read and maintain"
+      - "instanceof check followed by an explicit cast: two lines doing one job"
+      - "Compiler already knows the type after instanceof, so casting again is redundant"
+      - "Long chains of if-else instanceof statements are hard to read and maintain"
     note: "Pattern matching lets the compiler do the cast automatically when the check succeeds"
 
   - type: "code-compare"
@@ -17,7 +17,7 @@ slides:
     left:
       title: "Before Java 14: check + cast"
       language: "java"
-      caption: "Redundant: you check the type, then cast to the same type, compiler knows better"
+      caption: "Redundant: you check the type, then cast to the same type, compiler already knows it"
       code: |
         if (obj instanceof String) {
             String s = (String) obj;
@@ -37,84 +37,71 @@ slides:
     subtitle: "Type patterns for instanceof"
     bullets:
       - "Introduced Type Patterns, e.g., instanceof String s"
-      - "Compiler performs the cast implicitly on successful check"
+      - "Compiler performs the cast implicitly on a successful check"
       - "Binding variable scoped strictly to the if block"
-      - "Pattern variable cannot shadow existing fields in Java 14"
-    note: "Preview in Java 14, opt-in with --enable-preview"
+    note: "Preview in Java 14, requires --enable-preview flag"
 
   - type: "section"
-    title: "Java 16: Second Preview (JEP 375)"
-    subtitle: "Flow scoping refined + shadowing allowed"
+    title: "Java 16: Final (JEP 394)"
+    subtitle: "Pattern matching for instanceof becomes standard"
     bullets:
-      - "Pattern variable can now shadow fields and local variables"
-      - "Flow scoping analysis improved for complex && and || conditions"
-      - "Aligns pattern variable behavior with standard variable declaration rules"
-    note: "In Java 14 a pattern variable named 'value' was rejected if a field 'value' existed, Java 16 fixed that"
+      - "Feature finalized after previews in Java 14 and 15"
+      - "Pattern variables are no longer implicitly final (can be reassigned)"
+    note: "Java 16 finalized the feature; no preview flag required"
 
   - type: "code-compare"
-    title: "Java 14 vs Java 16: Scoping & Shadowing"
+    title: "Java 14 vs Java 16: Pattern Variable Behavior"
     left:
-      title: "Java 14: Shadowing not allowed"
+      title: "Java 14: Pattern variable implicitly final"
       language: "java"
-      caption: "Compile error if pattern variable name matched an existing field"
+      caption: "Reassignment not allowed in preview"
       code: |
-        // 'value' is a field in the class
-        if (obj instanceof String value) {
-            // Error in Java 14: pattern variable
-            // 'value' shadows field 'value'
-            System.out.println(value.length());
+        if (obj instanceof String s) {
+            // Error in Java 14:
+            // cannot assign a value to final variable 's'
+            s = s.toUpperCase();
         }
     right:
-      title: "Java 16: Shadowing allowed"
+      title: "Java 16: Pattern variable is mutable"
       language: "java"
-      caption: "Pattern variable shadows the field, consistent with standard local variable rules"
+      caption: "Reassignment allowed after finalization"
       code: |
-        // 'value' is a field in the class
-        if (obj instanceof String value) {
-            // OK in Java 16: local 'value' shadows field
-            System.out.println(value.length());
+        if (obj instanceof String s) {
+            // OK in Java 16
+            s = s.toUpperCase();
+            System.out.println(s);
         }
 
   - type: "section"
-    title: "Java 17: Final + New Preview"
+    title: "Java 17: New Preview"
     subtitle: "instanceof finalized (JEP 394) · switch patterns introduced (JEP 406)"
     bullets:
-      - "instanceof pattern matching is now a standard, permanent feature"
-      - "No --enable-preview flag needed for instanceof"
       - "New preview: Pattern Matching for switch, type patterns in case labels"
-      - "New preview: guarded patterns with && and null handling with case null"
-    note: "Sealed classes + pattern switch = the compiler can verify exhaustiveness"
+    note: "Java 17 introduced switch patterns as a preview feature; requires --enable-preview"
 
   - type: "code"
     title: "Java 17 Preview: Pattern Matching for switch"
     language: "java"
     compact: true
     code: |
-      static String formatter(Object obj) {
-          return switch (obj) {
-              case Integer i              -> "Integer: " + i;
-              case Long l                 -> "Long: " + l;
-              case String s && s.length() > 5 -> "Long String: " + s;
-              case String s               -> "String: " + s;
-              case null                   -> "Null input";
-              default                     -> "Unknown";
-          };
+      switch (obj) {
+              case String s -> System.out.println("Text: " + s);
+              case Integer i -> System.out.println("Number: " + i);
+              default -> System.out.println("Unknown");
       }
-    caption: "Type patterns, guarded patterns (&&), and null handling, all in one switch"
+    caption: "Introduces type patterns in switch (preview), simplifying instanceof + casting logic; advanced features like guards and null handling were added in later versions"
 
   - type: "two-column"
-    title: "Pattern Matching: Java 14 Preview → Java 17 Final"
+    title: "Pattern Matching: Java 14 Preview → Java 16 Final"
     left:
-      heading: "Java 14–16 (Preview)"
+      heading: "Java 14–17 (Previews)"
       bullets:
-        - "Java 14: instanceof type patterns (JEP 305)"
-        - "Java 15: no changes, feature rested"
-        - "Java 16: flow scoping + shadowing fixed (JEP 375)"
-        - "Opt-in with --enable-preview throughout"
+        - "Java 14: instanceof type patterns"
+        - "Java 15: second preview, refinement"
+        - "Java 17: switch patterns preview"
+        - "Opt-in with --enable-preview flag throughout preview versions"
     right:
-      heading: "Java 17 (Final + New Preview)"
+      heading: "Java 16 (Final)"
       bullets:
-        - "instanceof final — JEP 394, no flag needed"
-        - "switch patterns preview — JEP 406"
-        - "Guarded patterns: case Type t && condition"
-        - "Null-safe switch: case null supported"
+        - "instanceof type patterns finalized, no flag required"
+        - "Pattern variables are mutable and follow standard scoping rules"
