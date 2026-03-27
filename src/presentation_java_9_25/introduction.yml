@@ -1,0 +1,64 @@
+slides:
+  - type: "section"
+    title: "Introduction"
+    subtitle: "Understanding Java's Feature Lifecycle"
+
+  - type: "section"
+    title: "How Does Java Introduce New Features?"
+    subtitle: "A gradual process from experimentation to stability"
+    bullets:
+      - "Java doesn't release features overnight"
+      - "New capabilities go through a structured lifecycle"
+      - "Three stages: Incubator → Preview → Final"
+      - "Each stage allows feedback and refinement"
+    note: "This ensures stability while still innovating"
+
+  - type: "section"
+    title: "Stage 1: Incubator Modules"
+    subtitle: "JEP 11 — Experimental APIs in separate modules"
+    bullets:
+      - "New APIs/tools packaged in dedicated modules (e.g., jdk.incubator.*)"
+      - "Not part of the standard Java SE platform"
+      - "Requires explicit module inclusion at compile and runtime"
+      - "May be redesigned, deprecated, or removed in future releases"
+      - "Goal: gather real-world feedback before standardization"
+    note: "Incubator = early access to experimental APIs, handle with care"
+
+  - type: "section"
+    title: "Stage 2: Preview Features"
+    subtitle: "JEP 12 — Language and VM features under evaluation"
+    bullets:
+      - "Fully implemented features included in the JDK"
+      - "Must be enabled with --enable-preview flag"
+      - "Guaranteed to be present in that release for testing"
+      - "May change syntax or behavior in the next release"
+      - "Typically preview for 1–2 release cycles before finalization"
+    note: "Preview = try it now, but expect possible changes"
+
+  - type: "section"
+    title: "Stage 3: Final Features"
+    subtitle: "Stable, permanent additions to Java"
+    bullets:
+      - "Fully standardized and part of the Java SE specification"
+      - "No special flags required, enabled by default"
+      - "Backward compatibility guaranteed going forward"
+      - "Will not be removed or have breaking changes"
+      - "Production-ready for all Java applications"
+    note: "Final = stable, reliable, and here to stay"
+
+  - type: "two-column"
+    title: "Feature Lifecycle Summary"
+    left:
+      heading: "Incubator"
+      bullets:
+        - "Separate modules (jdk.incubator.*)"
+        - "Experimental APIs and tools"
+        - "May be removed or redesigned"
+        - "Requires explicit module flag"
+    right:
+      heading: "Preview → Final"
+      bullets:
+        - "Language/VM features"
+        - "Preview: --enable-preview required"
+        - "Final: no flag, stable and permanent"
+        - "Feedback shapes the final design"

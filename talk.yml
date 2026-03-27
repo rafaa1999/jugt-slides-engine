@@ -30,7 +30,7 @@ presenters:
 sponsors:
   - name: "JetBrains"
     tier: "Gold"
-    logo: "/assets/sponsors/jetbrains.png"
+    logo: "/assets/sponsors/jetbrains_logo.png"
     url: ""
 
 slides:
@@ -43,10 +43,14 @@ slides:
   - type: "agenda"
     title: "Agenda"
     items:
+      - "Introduction"
       - "Java 9–11 → Modular Java"
       - "Java 12–17 → Modern Language (records, switch, patterns)"
       - "Java 18–21 → Concurrency Revolution (Loom)"
-      - "Java 22–24 → Panama + Runtime Evolution"
+      - "Java 22–25 → Panama + Runtime Evolution"
+
+  # ----------------------- Introduction -----------------------
+  - $include: "src/presentation_java_9_25/introduction.yml"
 
   # ----------------------- Java 12–17 -----------------------
   - $include: "src/presentation_java_9_25/java_12_17/index.yml"
