@@ -1,8 +1,7 @@
 slides:
-  # SLIDE SEULE : Titre du Chapitre
   - type: "section"
     title: "Performance Improvements"
-    subtitle: "JVM Runtime Optimizations (Java 24)"
+    subtitle: "JVM Runtime Optimizations (Java 24+)"
 
   - type: "two-column"
     title: "The Memory Problem: Object Headers"
@@ -29,18 +28,21 @@ slides:
           // But the Header adds ~12-16 bytes!
       }
 
+      // Create 1 million users
       for (int i = 0; i < 1_000_000; i++) {
           new User(); // 'Labels' consume more RAM than data
       }
+      // Total: ~16-20 MB just for headers!
     caption: "The overhead happens automatically. Project Lilliput aims to shrink these 'labels' to save memory."
 
   - type: "two-column"
-    title: "The Solution: Project Lilliput"
-    subtitle: "Compact Object Headers"
+    title: "Project Lilliput: Compact Headers"
+    subtitle: "Java 24 — JEP 450"
     left:
       heading: "The Optimization"
       bullets:
-        - "Reduces header size significantly (up to 50%)"
+        - "Reduces header size from 128 to 64 bits"
+        - "50% reduction in header overhead"
         - "Shrinks the 'Shipping Label' to the minimum"
     right:
       heading: "The Real Benefits"
@@ -48,32 +50,75 @@ slides:
         - "Massive memory savings (10-20% total RAM)"
         - "Better CPU cache efficiency (Faster code)"
         - "Zero code changes required by developers"
+        - "Transparent improvement"
+
+  - type: "code"
+    title: "Lilliput Impact: Before vs After"
+    language: "java"
+    code: |
+      // Before Lilliput (Java 23 and earlier)
+      // Object header: 128 bits (16 bytes)
+      class Point {
+          int x;  // 4 bytes
+          int y;  // 4 bytes
+      }
+      // Total: 16 (header) + 8 (data) = 24 bytes
+
+      // After Lilliput (Java 24+)
+      // Object header: 64 bits (8 bytes)
+      class Point {
+          int x;  // 4 bytes
+          int y;  // 4 bytes
+      }
+      // Total: 8 (header) + 8 (data) = 16 bytes
+      // 33% memory reduction!
+    caption: "Lilliput cuts object overhead in half — automatic performance boost."
 
   - type: "two-column"
     title: "The Startup Problem: Cold Starts"
-    subtitle: "Why Java can be slow to wake up"
     left:
       heading: "Traditional Loading"
       bullets:
         - "Classes are loaded and linked during execution"
         - "Like a chef reading the recipe while cooking"
+        - "JVM warms up gradually"
     right:
       heading: "The Cloud Impact"
       bullets:
         - "Slower startup in Serverless/AWS Lambda"
         - "High latency during the first few seconds"
+        - "Poor user experience for CLI tools"
+
 
   - type: "two-column"
-    title: "AOT: Ahead-of-Time Loading"
-    subtitle: "Preparing before execution"
+    title: "Startup Optimization"
     left:
-      heading: "The AOT Solution"
+      heading: "CDS(Class data sharing)"
       bullets:
-        - "JVM prepares classes before the app starts"
-        - "Like prepping all ingredients before the rush"
+        - "Pre-parse class metadata"
+        - "Reduced class loading time"
+        - "Built into standard JDK"
+        - "Easy to enable"
     right:
-      heading: "The Benefits"
+      heading: "AOT(AHEAD OF TIME) / GraalVM"
       bullets:
-        - "Instant startup for Microservices"
-        - "Lower memory usage at boot time"
-        - "Perfect for modern Cloud environments"
+        - "Full native compilation"
+        - "Milliseconds startup"
+        - "Lower memory footprint"
+        - "Best for serverless/CLI"
+
+
+  - type: "two-column"
+    title: "Performance Summary: Java 22-25"
+    left:
+      heading: "Memory"
+      bullets:
+        - "Lilliput: 50% smaller headers"
+        - "Better cache locality"
+        - "Reduced GC pressure"
+    right:
+      heading: "Startup"
+      bullets:
+        - "CDS: Faster class loading"
+        - "AOT: Native-speed startup"
+        - "Perfect for cloud/serverless"

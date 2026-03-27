@@ -1,127 +1,105 @@
 slides:
   - type: "section"
     title: "Project Amber"
-    subtitle: "Cleaning Up the Java Language"
+    subtitle: "Language Evolution — Java's Modern Transformation"
 
   - type: "two-column"
-    title: "Why Project Amber?"
+    title: "What is Project Amber?"
     left:
-        heading: "The 'Old' Java"
-        bullets:
-            - "Code was too long and repetitive"
-            - "Like writing a 10-page contract for a simple task"
+      heading: "The Mission"
+      bullets:
+        - "Reduce Java's 'ceremony' and boilerplate"
+        - "Make code more expressive and readable"
+        - "Bring modern language features to Java"
     right:
-        heading: "The Goal"
-        bullets:
-            - "Remove 'Boilerplate' (useless code)"
-            - "Make Java as clean as modern languages"
+      heading: "Key Deliverables"
+      bullets:
+        - "Pattern matching (instanceof, switch)"
+        - "Records and Sealed classes"
+        - "Text blocks and String templates"
+        - "Unnamed variables and patterns"
 
   - type: "two-column"
-    title: "The String Problem"
+    title: "Language Features Timeline"
     left:
-        heading: "The '+' Nightmare"
-        bullets:
-            - "Mixing text and variables with '+' is messy"
-            - "Hard to read and easy to break"
+      heading: "Completed (Java 14-21)"
+      bullets:
+        - "Switch expressions (Java 14)"
+        - "Records (Java 16)"
+        - "Sealed classes (Java 17)"
+        - "Pattern matching for instanceof (Java 16)"
+        - "Pattern matching for switch (Java 21)"
+        - "Record patterns (Java 21)"
     right:
-        heading: "The Maintenance Cost"
-        bullets:
-            - "Complex text takes too much time to write"
-            - "Small errors are hard to find"
+      heading: "New in Java 22-24"
+      bullets:
+        - "Unnamed variables & patterns (Java 22)"
+        - "Flexible constructor bodies (Java 24)"
+        - "Markdown Javadoc (Java 23)"
+        - "Module imports (Java 23)"
+        - "Stream gatherers (Java 24)"
 
+  - type: "code"
+    title: "String Templates: A Historical Note"
+    language: "java"
+    code: |
+      // String Templates were previewed in Java 21-22
+      // but WITHDRAWN in Java 23 due to design concerns
 
-  - type: "code-compare"
-    title: "Before vs After: String Templates"
+      // The original idea:
+      String message = STR."Hello \{name}, welcome!";
+
+      // Why it was withdrawn:
+      // 1. Security concerns with template injection
+      // 2. Complexity of the processor framework
+      // 3. Better alternatives being explored
+
+      // For now, use traditional methods:
+      String message = "Hello " + name + ", welcome!";
+      // Or use MessageFormat or String.formatted()
+    caption: "String Templates were withdrawn — the Java team is exploring better approaches."
+
+  - type: "two-column"
+    title: "What Project Amber Achieved"
     left:
-      title: "Concatenation"
-      language: "java"
-      code: |
-        // Manual concatenation
-        String message = "Hello " + name + ", welcome!";
-        // Multiple parts → less readable and error-prone
+      heading: "Less Boilerplate"
+      bullets:
+        - "Records replace verbose POJOs"
+        - "Switch expressions remove fall-through"
+        - "Pattern matching eliminates casting"
+        - "Unnamed variables clean up unused vars"
     right:
-      title: "String Templates"
-      language: "java"
-      code: |
-        // STR is a template processor
-        // \{name} injects the variable directly into the string
-        String message = STR."Hello \{name}, welcome!";
-        // Cleaner, safer, and easier to maintain
+      heading: "Better Readability"
+      bullets:
+        - "Code reads like prose"
+        - "Intent is clear from syntax"
+        - "Less noise, more signal"
+        - "Safer code with less effort"
 
+  - type: "code"
+    title: "The Modern Java Way"
+    language: "java"
+    code: |
+      // Modern Java is clean and expressive
 
-#  - type: "section"
-#    title: "Pattern Matching"
-#    subtitle: "Simplified Type Checking"
-#
-#  - type: "two-column"
-#    title: "The 'Double Check' Problem"
-#    left:
-#        heading: "The Old Way"
-#        bullets:
-#          - "Like showing your ID twice at the same gate"
-#          - "You check the type, then you manually cast it"
-#    right:
-#        heading: "Why it's Bad"
-#        bullets:
-#          - "Repetitive and boring to write"
-#          - "More lines of code = more places for bugs"
-#
-#  - type: "code"
-#    title: "Before vs After: Pattern Matching"
-#    language: "java"
-#    code: |
-#      // OLD: Check AND then manual cast
-#      if (obj instanceof String) {
-#      String s = (String) obj;
-#            System.out.println(s.toUpperCase());
-#        }
-#
-#        // NEW: Check and use immediately
-#        if (obj instanceof String s) {
-#            System.out.println(s.toUpperCase());
-#        }
-#      caption: "Pattern matching combines checking and casting into one single, safe step."
-#
-#  - type: "two-column"
-#    title: "Key Benefits"
-#    left:
-#        heading: "Clean & Safe"
-#        bullets:
-#          - "Removes useless code (Boilerplate)"
-#          - "The compiler does the hard work for you"
-#    right:
-#        heading: "Real World Use"
-#        bullets:
-#          - "Perfect for processing complex data"
-#          - "Makes your APIs much easier to read"
-#
-#
-#  - type: "two-column"
-#    title: "Real Use Cases: Pattern Matching"
-#    subtitle: "Where it helps the most in modern Java"
-#    left:
-#        heading: "Data Processing"
-#        bullets:
-#          - "Quickly identify different types of messages"
-#          - "Great for handling JSON or database results"
-#          - "Perfect for 'Type-Safe' data extraction"
-#    right:
-#        heading: "Backend Systems"
-#        bullets:
-#          - "Simplify complex 'if-else' logic"
-#          - "Write code that looks like a story, not a manual"
-#          - "Easier to maintain and debug"
-#
-#  - type: "code"
-#    title: "Practical Example: Message Handling"
-#    language: "java"
-#    code: |
-#        // Handling different data types in one clean block
-#        public void process(Object message) {
-#            if (message instanceof String s) {
-#                System.out.println("Text: " + s.toLowerCase());
-#            } else if (message instanceof Integer i) {
-#                System.out.println("Number: " + (i * 2));
-#            }
-#        }
-#    caption: "In modern Java, we focus on what the data IS, not how to cast it."
+      // Records: Data classes in one line
+      record User(String name, int age) {}
+
+      // Sealed interfaces: Controlled hierarchies
+      sealed interface Shape permits Circle, Rectangle {}
+
+      // Pattern matching: Type checking made simple
+      String describe(Object obj) {
+          return switch (obj) {
+              case String s -> "Text: " + s;
+              case Integer i -> "Number: " + i;
+              case null -> "Nothing";
+              default -> "Unknown";
+          };
+      }
+
+      // Unnamed patterns: Ignore what you don't need
+      if (obj instanceof Point(var x, var _)) {
+          System.out.println("X coordinate: " + x);
+      }
+    caption: "Project Amber made Java more expressive while maintaining backward compatibility."

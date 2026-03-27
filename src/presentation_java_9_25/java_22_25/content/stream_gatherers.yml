@@ -1,0 +1,144 @@
+slides:
+  - type: "section"
+    title: "Stream Gatherers"
+    subtitle: "Java 24 — Create Your Own Stream Operations"
+
+  - type: "two-column"
+    title: "The Problem"
+    left:
+      heading: "Streams Are Limited"
+      bullets:
+        - "You get map, filter, reduce..."
+        - "But what if you want sliding windows?"
+        - "Or batching items into groups?"
+    right:
+      heading: "Before Gatherers"
+      bullets:
+        - "Write complex workarounds"
+        - "Use external libraries"
+        - "Hard to reuse the logic"
+
+  - type: "code"
+    title: "What You Wanted: Sliding Windows"
+    language: "java"
+    code: |
+      // Input:  [a, b, c, d, e]
+      // Output: [[a,b,c], [b,c,d], [c,d,e]]
+      //         ^^^       ^^^       ^^^
+      //         window 1  window 2  window 3
+
+      // Before: ugly workaround
+      List<List<String>> windows = new ArrayList<>();
+      for (int i = 0; i <= list.size() - 3; i++) {
+          windows.add(list.subList(i, i + 3));
+      }
+    caption: "Creating custom stream operations was painful."
+
+  - type: "code"
+    title: "After: Stream Gatherers"
+    language: "java"
+    code: |
+      import static java.util.stream.Gatherers.*;
+
+      // Java 24: Built-in sliding window!
+      list.stream()
+          .gather(windowSliding(3))
+          .forEach(System.out::println);
+
+      // Output:
+      // [a, b, c]
+      // [b, c, d]
+      // [c, d, e]
+    caption: "Clean, readable, and built into Java 24."
+
+  - type: "code"
+    title: "Built-in Gatherers"
+    language: "java"
+    code: |
+      import static java.util.stream.Gatherers.*;
+
+      // Fixed-size windows (batches)
+      list.stream()
+          .gather(windowFixed(3))
+          .forEach(System.out::println);
+      // [[a, b, c], [d, e]]
+
+      // Sliding windows
+      list.stream()
+          .gather(windowSliding(3))
+          .forEach(System.out::println);
+      // [[a, b, c], [b, c, d], [c, d, e]]
+#
+#      // Fold (accumulate with state)
+#      list.stream()
+#          .gather(fold(() -> 0, (sum, n) -> sum + n))
+#          .findFirst();
+#      // Returns total sum
+#    caption: "Java 24 comes with useful gatherers out of the box."
+
+#  - type: "code"
+#    title: "Custom Gatherer: Remove Duplicates"
+#    language: "java"
+#    code: |
+#      // Create your own gatherer!
+#      Gatherer<String, ?, String> removeDuplicates() {
+#          return Gatherer.of(
+#              () -> new HashSet<String>(),  // state
+#              (seen, item, output) -> {     // logic
+#                  if (seen.add(item)) {     // add returns false if duplicate
+#                      output.push(item);
+#                  }
+#              }
+#          );
+#      }
+#
+#      // Use it
+#      Stream.of("a", "b", "a", "c", "b")
+#          .gather(removeDuplicates())
+#          .forEach(System.out::print);
+#      // Output: abc
+#    caption: "Define once, use everywhere."
+#
+#  - type: "code"
+#    title: "Real Example: Batch Processing"
+#    language: "java"
+#    code: |
+#      // Process records in batches of 100
+#      <T> Gatherer<T, ?, List<T>> batch(int size) {
+#          return Gatherer.ofSequential(
+#              ArrayList::new,
+#              (batch, item, output) -> {
+#                  batch.add(item);
+#                  if (batch.size() == size) {
+#                      output.push(new ArrayList<>(batch));
+#                      batch.clear();
+#                  }
+#              },
+#              (batch, output) -> {
+#                  if (!batch.isEmpty()) {
+#                      output.push(batch);
+#                  }
+#              }
+#          );
+#      }
+#
+#      // Save to database in batches
+#      records.stream()
+#          .gather(batch(100))
+#          .forEach(this::saveBatch);
+#    caption: "Gatherers make batch processing simple and reusable."
+
+  - type: "two-column"
+    title: "Key Benefits"
+    left:
+      heading: "Reusable"
+      bullets:
+        - "Define once, use everywhere"
+        - "Share with your team"
+        - "Compose with other operations"
+    right:
+      heading: "Simple"
+      bullets:
+        - "No intermediate collections"
+        - "Lazy evaluation (like other stream ops)"
+        - "Clean, readable code"

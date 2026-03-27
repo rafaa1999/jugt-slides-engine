@@ -23,16 +23,47 @@ slides:
     title: "Example: Modern Documentation (Java 23)"
     language: "java"
     code: |
-      /** * <b>Old Way</b>
-       * <ul><li>Hard to write</li></ul>
+      /**
+       * <b>Old Way</b>
+       * <ul>
+       *   <li>Hard to write</li>
+       *   <li>Ugly HTML tags</li>
+       * </ul>
        */
       public void oldMethod() {}
 
       /// ### New Way (Markdown)
       /// - Simple and clean list
       /// - **Bold text** is easy!
+      /// - `code snippets` work too
       public void newMethod() {}
     caption: "Markdown Javadoc (using ///) makes your code documentation look professional without the HTML mess."
+
+  - type: "code"
+    title: "Markdown Javadoc Features"
+    language: "java"
+    code: |
+      /// # User Service
+      /// Manages user operations for the application.
+      ///
+      /// ## Usage Example
+      /// ```java
+      /// UserService service = new UserService();
+      /// User user = service.findById(123);
+      /// ```
+      ///
+      /// ## Features
+      /// - **CRUD operations** for users
+      /// - **Validation** with built-in rules
+      /// - **Caching** for performance
+      ///
+      /// @param id the user identifier
+      /// @return the user if found
+      /// @throws UserNotFoundException if user doesn't exist
+      public User findById(long id) {
+          // implementation
+      }
+    caption: "Markdown supports headings, code blocks, lists, and more — familiar to all developers."
 
   - type: "two-column"
     title: "Module Imports: Cleaning the Header"
@@ -58,11 +89,71 @@ slides:
       import java.util.List;
       import java.util.ArrayList;
       import java.util.Map;
+      import java.util.HashMap;
+      import java.util.Set;
+      import java.util.HashSet;
       import java.util.stream.Collectors;
+      import java.util.stream.Stream;
+      // ... 30 more lines
 
       // NEW (Java 23): One line for everything essential
       import module java.base;
+      // Now you have access to List, Map, Set, Stream, etc.
     caption: "Importing a module gives you access to all its classes instantly, keeping your file header clean."
+
+  - type: "code"
+    title: "Module Imports: Practical Example"
+    language: "java"
+    code: |
+      // Before: Verbose imports for a typical service
+      import java.util.List;
+      import java.util.Optional;
+      import java.util.stream.Collectors;
+      import java.time.LocalDateTime;
+      import java.time.format.DateTimeFormatter;
+
+      public class ReportService {
+          public List<String> generateReport() {
+              var now = LocalDateTime.now();
+              return List.of("Report generated at " + now);
+          }
+      }
+
+      // After: Clean and focused on code
+      import module java.base;
+
+      public class ReportService {
+          public List<String> generateReport() {
+              var now = LocalDateTime.now();
+              return List.of("Report generated at " + now);
+          }
+      }
+    caption: "Module imports reduce boilerplate and let you focus on business logic."
+
+  - type: "code"
+    title: "Unnamed Patterns in Practice"
+    language: "java"
+    code: |
+      // Processing records with unused fields
+      record Order(String id, double amount, String status, LocalDateTime date) {}
+
+      // Before: must name everything
+      List<String> ids = orders.stream()
+          .map(order -> order.id())
+          .toList();
+
+      // After: underscore for unused lambda parameter
+      orders.forEach(_ -> totalOrders++);
+
+      // Pattern matching with unnamed components
+      String describe(Shape shape) {
+          return switch (shape) {
+              case Circle(var r) -> "Circle";
+              case Rectangle(var _, var _) -> "Rectangle";  // dimensions ignored
+              case Triangle(var _, var _) -> "Triangle";
+          };
+      }
+    caption: "Underscore '_' clearly communicates: this value exists but I'm choosing to ignore it."
 
   - type: "two-column"
     title: "Key Benefits: Developer Happiness"
@@ -71,8 +162,27 @@ slides:
       bullets:
         - "Less time spent on 'Boilerplate' code"
         - "Instant documentation formatting"
+        - "Clean imports with one line"
     right:
       heading: "Better Reading"
       bullets:
         - "Clean files are easier to maintain"
         - "New developers understand the code faster"
+        - "Focus on what matters: business logic"
+
+  - type: "two-column"
+    title: "Summary: Java 22-25 Improvements"
+    left:
+      heading: "Language"
+      bullets:
+        - "Unnamed variables & patterns"
+        - "Flexible constructor bodies"
+        - "Stream gatherers"
+        - "Virtual threads"
+    right:
+      heading: "Platform"
+      bullets:
+        - "Foreign Function & Memory API"
+        - "Compact object headers (Lilliput)"
+        - "Markdown Javadoc"
+        - "Module imports"

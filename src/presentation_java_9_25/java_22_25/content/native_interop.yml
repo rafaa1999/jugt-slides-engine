@@ -1,59 +1,112 @@
 slides:
   - type: "section"
     title: "Foreign Function & Memory API"
-    subtitle: "Connecting Java with Native Code"
+    subtitle: "Java 22 — Call C Code from Java (No JNI!)"
 
   - type: "two-column"
-    title: "The Native Bridge: JNI vs. Modern API"
-    subtitle: "Accessing C or C++ libraries safely"
+    title: "The Old Way: JNI"
     left:
-      heading: "The Old Bridge (JNI)"
+      heading: "What is JNI?"
       bullets:
-        - "Like a dangerous, complex border crossing"
-        - "Requires writing manual C code (Boilerplate)"
-        - "Very slow to develop and easy to crash"
+        - "Java Native Interface"
+        - "Lets Java call C/C++ code"
+        - "Used for 25+ years"
     right:
-      heading: "The New Bridge (FFM API)"
+      heading: "Why It's Painful"
       bullets:
-        - "Like a modern, high-speed highway"
-        - "Access native libraries directly from Java"
-        - "Safe and managed by the JVM"
+        - "Write C code by hand"
+        - "Compile for each platform"
+        - "Easy to crash the JVM"
+        - "Complex setup"
 
-  - type: "code-compare"
-    title: "JNI vs Modern API"
-    left:
-      title: "JNI (Complex & Unsafe)"
-      language: "java"
-      code: |
-        public class NativeExample {
-            static {
-                System.loadLibrary("nativeLib");
-            }
-            // Need native method in C
-            public native int sum(int a, int b);
-        }
-    right:
-      title: "Foreign API (Simple & Safe)"
-      language: "java"
-      code: |
-        import java.lang.foreign.*;
+  - type: "code"
+    title: "JNI: Too Many Steps"
+    language: "java"
+    code: |
+      // Step 1: Declare native method
+      public class MathLib {
+          static { System.loadLibrary("math"); }
+          public native int add(int a, int b);
+      }
 
-        // Direct access to native linker
-        Linker linker = Linker.nativeLinker();
+      // Step 2: Generate header
+      // $ javac -h . MathLib.java
 
-        // Call functions without C boilerplate
-        // Faster, safer, and 100% Java
-    caption: "JNI requires manual integration with external C code, while the Foreign API provides a direct and safer way to interact with native libraries."
+      // Step 3: Write C code
+      /*
+      #include <jni.h>
+      JNIEXPORT jint JNICALL Java_MathLib_add
+        (JNIEnv *env, jobject obj, jint a, jint b) {
+          return a + b;
+      }
+      */
+
+      // Step 4: Compile C for Windows, Mac, Linux...
+      // Step 5: Package native libraries
+      // Step 6: Debug memory crashes...
+    caption: "6+ steps just to add two numbers? No thanks!"
+
+  - type: "code"
+    title: "New Way: Foreign Function API"
+    language: "java"
+    code: |
+      import java.lang.foreign.*;
+
+      // Call C's strlen function directly!
+      public class Example {
+          public static void main(String[] args) throws Throwable {
+              // Get the native linker
+              Linker linker = Linker.nativeLinker();
+
+              // Find strlen in C library
+              MethodHandle strlen = linker.downcallHandle(
+                  linker.defaultLookup().find("strlen").orElseThrow(),
+                  FunctionDescriptor.of(
+                      ValueLayout.JAVA_LONG,
+                      ValueLayout.ADDRESS
+                  )
+              );
+
+              // Call it!
+              try (Arena arena = Arena.ofConfined()) {
+                  MemorySegment str = arena.allocateFrom("Hello!");
+                  long len = (long) strlen.invoke(str);
+                  System.out.println("Length: " + len);  // 6
+              }
+          }
+      }
+    caption: "No C code, no compilation — just Java!"
 
   - type: "two-column"
-    title: "Key Benefits: Performance & Safety"
+    title: "JNI vs FFM: Quick Comparison"
     left:
-      heading: "Better Performance"
+      heading: "JNI"
       bullets:
-        - "Zero overhead for calling native code"
-        - "Efficient memory management outside the Heap"
+        - "Need to know C/C++"
+        - "Manual memory management"
+        - "Platform-specific builds"
+        - "Crash-prone"
     right:
-      heading: "Higher Safety"
+      heading: "FFM API"
       bullets:
-        - "No more random 'Segment Fault' crashes"
-        - "The JVM protects the memory from corruption"
+        - "100% Java"
+        - "Automatic memory management"
+        - "Cross-platform"
+        - "Memory safe"
+
+  - type: "two-column"
+    title: "When to Use"
+    left:
+      heading: "Good For"
+      bullets:
+        - "Calling OS functions"
+        - "Using C libraries"
+        - "GPU computing"
+        - "Performance-critical code"
+    right:
+      heading: "Examples"
+      bullets:
+        - "Image processing"
+        - "Cryptographic hardware"
+        - "Scientific calculations"
+        - "Game engines"

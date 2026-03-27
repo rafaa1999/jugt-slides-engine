@@ -1,0 +1,121 @@
+slides:
+  - type: "section"
+    title: "Unnamed Variables & Patterns"
+    subtitle: "Java 22 — The Underscore '_' for Ignored Values"
+
+  - type: "two-column"
+    title: "The Problem"
+    left:
+      heading: "Unused Variables"
+      bullets:
+        - "You declare a variable but never use it"
+        - "Compiler shows warnings"
+        - "You waste time thinking of a name"
+    right:
+      heading: "Real Example"
+      bullets:
+        - "Loop where you only need the counter"
+        - "Try-catch where exception details don't matter"
+        - "Lambda where one parameter is unused"
+
+  - type: "code-compare"
+    title: "Before vs After: Lambda"
+    left:
+      title: "Before (Java 21)"
+      language: "java"
+      code: |
+        // I have to name 'key' even though I don't use it
+        map.forEach((key, value) -> {
+            System.out.println(value);
+        });
+    right:
+      title: "After (Java 22)"
+      language: "java"
+      code: |
+        // '_' means 'I don't care about this'
+        map.forEach((_, value) -> {
+            System.out.println(value);
+        });
+    caption: "The underscore tells readers: this value exists but I'm ignoring it."
+
+  - type: "code-compare"
+    title: "Before vs After: Try-Catch"
+    left:
+      title: "Before"
+      language: "java"
+      code: |
+        try {
+            connect();
+        } catch (Exception e) {
+            // I don't need 'e', but I must name it
+            log("Connection failed");
+        }
+    right:
+      title: "After"
+      language: "java"
+      code: |
+        try {
+            connect();
+        } catch (Exception _) {
+            // '_' means 'exception exists, but I ignore it'
+            log("Connection failed");
+        }
+    caption: "Cleaner code — no more invented names like 'ignored' or 'unused'."
+
+  - type: "code-compare"
+    title: "Before vs After: Enhanced For-Loop"
+    left:
+      title: "Before"
+      language: "java"
+      code: |
+        // I only want to count iterations
+        for (String item : list) {
+            counter++;
+        }
+        // 'item' is never used — warning!
+    right:
+      title: "After"
+      language: "java"
+      code: |
+        // '_' makes it clear: I don't need the element
+        for (var _ : list) {
+            counter++;
+        }
+        // No warning, clear intent
+    caption: "When you only care about the loop running, not the elements."
+
+  - type: "code"
+    title: "Pattern Matching: Ignoring Record Fields"
+    language: "java"
+    code: |
+      record User(String name, int age, String email) {}
+
+      // Before: must name every field
+      String getName(User user) {
+          return switch (user) {
+              case User(var name, var age, var email) -> name;
+          };
+      }
+
+      // After: only name what you need
+      String getName(User user) {
+          return switch (user) {
+              case User(var name, var _, var _) -> name;
+          };
+      }
+    caption: "Use '_' for record components you don't care about."
+
+  - type: "two-column"
+    title: "Key Benefits"
+    left:
+      heading: "Cleaner Code"
+      bullets:
+        - "Less clutter in your code"
+        - "Clear intent: 'I'm ignoring this'"
+        - "No more fake variable names"
+    right:
+      heading: "No Warnings"
+      bullets:
+        - "Compiler is happy"
+        - "Cleaner builds"
+        - "Better code reviews"

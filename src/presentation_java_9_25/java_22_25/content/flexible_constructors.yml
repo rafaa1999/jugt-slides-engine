@@ -1,0 +1,147 @@
+slides:
+  - type: "section"
+    title: "Flexible Constructor Bodies"
+    subtitle: "Java 24 — Code Before super()"
+
+  - type: "two-column"
+    title: "The Old Rule"
+    left:
+      heading: "Super Must Be First"
+      bullets:
+        - "super() or this() must be the first line"
+        - "Cannot check parameters before calling super"
+        - "Cannot transform parameters"
+    right:
+      heading: "Why It's Annoying"
+      bullets:
+        - "Create invalid objects just to throw them away"
+        - "Need ugly helper methods"
+        - "Code duplication everywhere"
+
+  - type: "code-compare"
+    title: "Before vs After"
+    left:
+      title: "Before (Java 23)"
+      language: "java"
+      code: |
+        public class User {
+            private final String name;
+
+            public User(String name) {
+                super();  // Must be first!
+                // Can't validate before this
+                if (name == null) {
+                    throw new IllegalArgumentException();
+                }
+                this.name = name;
+            }
+        }
+    right:
+      title: "After (Java 24)"
+      language: "java"
+      code: |
+        public class User {
+            private final String name;
+
+            public User(String name) {
+                // Validate BEFORE super()!
+                if (name == null) {
+                    throw new IllegalArgumentException();
+                }
+                super();
+                this.name = name;
+            }
+        }
+    caption: "Now you can validate, compute, or log before calling super()."
+
+  - type: "code"
+    title: "Real Example: Positive Number"
+    language: "java"
+    code: |
+      public class PositiveNumber extends Number {
+          private final int value;
+
+          // Before: had to use helper method
+          public PositiveNumber(int value) {
+              super(validatePositive(value));  // ugly!
+              this.value = value;
+          }
+
+          // Now: validation right in constructor
+          public PositiveNumber(int value) {
+              if (value <= 0) {
+                  throw new IllegalArgumentException(
+                      "Must be positive: " + value
+                  );
+              }
+              super();
+              this.value = value;
+          }
+      }
+    caption: "No more helper methods — validation is right where you need it."
+
+  - type: "code"
+    title: "Example: Transform Parameters"
+    language: "java"
+    code: |
+      public class Email {
+          private final String address;
+
+          public Email(String address) {
+              // Clean and validate first
+              if (address == null || !address.contains("@")) {
+                  throw new IllegalArgumentException("Invalid email");
+              }
+
+              // Transform before storing
+              String cleaned = address.trim().toLowerCase();
+
+              super();
+              this.address = cleaned;
+          }
+      }
+
+      // Usage
+      Email email = new Email("  USER@Example.COM  ");
+      // Stored as: "user@example.com"
+    caption: "Transform parameters before the object is created."
+
+  - type: "code"
+    title: "Example: Delegating Constructors"
+    language: "java"
+    code: |
+      public class Config {
+          private final String path;
+
+          // Main constructor
+          public Config(String path) {
+              Objects.requireNonNull(path);
+              super();
+              this.path = path;
+          }
+
+          // Delegating constructor — transform first
+          public Config(Path filePath) {
+              if (filePath == null) {
+                  throw new IllegalArgumentException("Path required");
+              }
+              // Transform Path to String, then delegate
+              this(filePath.toAbsolutePath().toString());
+          }
+      }
+    caption: "this() delegation also supports code before it."
+
+  - type: "two-column"
+    title: "Key Benefits"
+    left:
+      heading: "Cleaner Code"
+      bullets:
+        - "No more helper methods"
+        - "Validation in one place"
+        - "Fail fast before expensive operations"
+    right:
+      heading: "Safer Objects"
+      bullets:
+        - "Objects never in invalid state"
+        - "Clear intent in constructor"
+        - "Less defensive copying"
