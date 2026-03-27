@@ -68,22 +68,6 @@ slides:
         final class Circle    extends Shape { }
         final class Rectangle extends Shape { }
 
-  - type: "code"
-    title: "Java 16: Reflection API"
-    language: "java"
-    code: |
-      Class<?> shapeClass = Shape.class;
-
-      Class<?>[] permitted = shapeClass.getPermittedSubclasses();
-
-      for (Class<?> sub : permitted) {
-          System.out.println(sub.getSimpleName());
-      }
-      // Output:
-      // Circle
-      // Rectangle
-    caption: "getPermittedSubclasses() lets frameworks inspect sealed hierarchies at runtime"
-
   - type: "two-column"
     title: "Sealed Classes: Java 15 Preview → Java 17 Final"
     left:
