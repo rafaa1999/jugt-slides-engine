@@ -1,0 +1,11 @@
+- type: "title"
+  title: "Java 9 to 11"
+  subtitle: "The Features That Changed Everything"
+  showPresenters: true
+
+- type: "agenda"
+  title: "Agenda"
+  items:
+    - "Java 9 — Modularity, JPMS, JShell, Collection factories"
+    - "Java 10 — Local variable type inference (var)"
+    - "Java 11 — LTS model, HTTP Client, String methods, Single-file programs"

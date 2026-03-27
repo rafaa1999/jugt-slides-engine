@@ -52,6 +52,289 @@ slides:
   # ----------------------- Introduction -----------------------
   - $include: "src/presentation_java_9_25/introduction.yml"
 
+  - type: "agenda"
+    title: "Agenda"
+    items:
+      - "Java 9 — Modularity, JPMS, JShell, Collection factories"
+      - "Java 10 — Local variable type inference (var)"
+      - "Java 11 — LTS model, HTTP Client, String methods, Single-file programs"
+
+  # ── Java 9 ──────────────────────────────────────────────────────────────────
+
+  - type: "section"
+    title: "Java 9 — September 2017"
+    subtitle: "The Modular Platform"
+
+  - type: "two-column"
+    title: "What is Modularity & Why It Mattered"
+    left:
+      heading: "The Problem"
+      bullets:
+        - "Entire JDK was one monolithic block — you shipped everything even if you used 10% of it"
+        - "No strong boundary between public APIs and internals — developers relied on sun.misc.Unsafe"
+        - "Large applications were hard to maintain and secure at scale"
+    right:
+      heading: "The Context"
+      bullets:
+        - "The JDK itself needed to scale down for small devices and dense cloud deployments"
+        - "Project Jigsaw started in August 2008, design & implementation for Java 9 began in 2014"
+        - "This was a 9-year effort before shipping in September 2017"
+
+  - type: "two-column"
+    title: "JPMS: Java Platform Module System"
+    left:
+      heading: "Core Concepts"
+      bullets:
+        - "JPMS = JSR 376, implemented by JEP 261"
+        - "A module = a named, self-describing collection of code and data with explicit dependencies"
+        - "Every module declares what it exports (public API) and what it requires (dependencies)"
+        - "Internal APIs such as sun.* are now encapsulated by default (JEP 260)"
+    right:
+      heading: "What It Unlocks"
+      bullets:
+        - "JDK itself was split into modules: java.base, java.sql, java.xml, etc. (JEP 200)"
+        - "jlink (JEP 282): create a custom minimal JRE containing only the modules your app needs"
+        - "Reflective access to non-exported packages is now restricted by default"
+
+  - type: "code"
+    title: "JPMS — module-info.java"
+    language: "java"
+    code: |
+      // module-info.java
+      module com.myapp.core {
+          requires java.sql;
+          exports com.myapp.api;
+      }
+
+  - type: "two-column"
+    title: "JShell: Java Gets a REPL"
+    left:
+      heading: "Key Points"
+      bullets:
+        - "JShell (JEP 222) = Java's first official Read-Eval-Print Loop"
+        - "Type declarations, statements, and expressions directly — no class or main() needed"
+        - "Designed for rapid exploration, prototyping, and learning"
+    right:
+      heading: "Details"
+      bullets:
+        - "Ships as a command-line tool (jshell) and a public API — IDEs can embed it"
+        - "State is maintained across entries — variables and methods persist in the session"
+        - "JEP created in 2014 and took three years to deliver"
+
+  - type: "code"
+    title: "JShell in Action"
+    language: "text"
+    code: |
+      jshell> int x = 10
+      x ==> 10
+
+      jshell> x * x
+      $2 ==> 100
+
+      jshell> "hello".toUpperCase()
+      $3 ==> "HELLO"
+
+  - type: "two-column"
+    title: "Collection Factory Methods: List.of(), Set.of(), Map.of()"
+    left:
+      heading: "Before Java 9"
+      bullets:
+        - "Verbose and awkward — required Arrays.asList() + Collections.unmodifiableList() or anonymous inner class hacks"
+        - "The old unmodifiable wrapper was a lie — someone with the underlying reference could still mutate it"
+    right:
+      heading: "Java 9+ (JEP 269)"
+      bullets:
+        - "Truly unmodifiable — not a wrapper, designed from scratch to be immutable"
+        - "Null elements are disallowed — passing null throws NullPointerException"
+        - "No guaranteed order for Set and Map — do not rely on insertion order"
+        - "Fixed-arg overloads up to 10 elements; use Map.ofEntries() for more"
+
+  - type: "code"
+    title: "Collection Factory Methods — Before Java 9"
+    language: "java"
+    caption: "Before Java 9"
+    code: |
+      List<String> old = Collections.unmodifiableList(Arrays.asList("a", "b", "c"));
+
+  - type: "code"
+    title: "Collection Factory Methods — Java 9+"
+    language: "java"
+    caption: "Java 9+"
+    code: |
+      List<String> list = List.of("a", "b", "c");
+      Set<String>  set  = Set.of("x", "y", "z");
+      Map<String, Integer> map = Map.of("one", 1, "two", 2);
+
+      // Map beyond 10 entries
+      Map<String, Integer> big = Map.ofEntries(
+          Map.entry("a", 1), Map.entry("b", 2)
+      );
+
+  # ── Java 10 ─────────────────────────────────────────────────────────────────
+
+  - type: "section"
+    title: "Java 10 — March 2018"
+    subtitle: "Local-Variable Type Inference"
+
+  - type: "two-column"
+    title: "Local Variable Type Inference: var"
+    left:
+      heading: "What It Is"
+      bullets:
+        - "JEP 286, authored by Brian Goetz — extends type inference to local variable declarations with initializers"
+        - "var is not a keyword — it is a reserved type name — code using var as a variable name still compiles"
+        - "Type is still statically inferred at compile time — this is not dynamic typing"
+    right:
+      heading: "Restrictions"
+      bullets:
+        - "Works on: local variables with initializers, enhanced for loop indexes, traditional for loop variables"
+        - "Does NOT work on: method parameters, return types, fields, constructor formals, catch blocks"
+        - "Cannot use with: null initializers, lambdas, method references, array initializers"
+
+  - type: "code"
+    title: "var — Before Java 10"
+    language: "java"
+    caption: "Before Java 10"
+    code: |
+      ArrayList<String> list = new ArrayList<String>();
+      Stream<String> stream = list.stream();
+
+  - type: "code"
+    title: "var — Java 10+"
+    language: "java"
+    caption: "Java 10+"
+    code: |
+      var list   = new ArrayList<String>(); // infers ArrayList<String>
+      var stream = list.stream();           // infers Stream<String>
+
+      // Works in for loops
+      for (var entry : map.entrySet()) { ... }
+
+      // These DON'T work
+      var x;              // no initializer — ERROR
+      var f = () -> {};   // lambda needs explicit target type — ERROR
+      var g = null;       // null type — ERROR
+
+  # ── Java 11 LTS ──────────────────────────────────────────────────────────────
+
+  - type: "section"
+    title: "Java 11 — September 2018"
+    subtitle: "First LTS under the new 6-month release model"
+
+  - type: "two-column"
+    title: "HTTP Client API (JEP 321)"
+    left:
+      heading: "What Is New"
+      bullets:
+        - "Standardizes the HTTP Client incubating since Java 9 (JEP 110), refined through Java 10"
+        - "Lives in java.net.http — replaces HttpURLConnection which dates back to Java 1.1"
+        - "Supports HTTP/1.1 and HTTP/2 natively — no external library needed"
+        - "Built-in WebSocket support"
+    right:
+      heading: "Design"
+      bullets:
+        - "Fully asynchronous — non-blocking requests via CompletableFuture"
+        - "Back-pressure and flow control via java.util.concurrent.Flow (reactive streams)"
+        - "HttpClient is the entry point — builder pattern for redirects, auth, executor, and SSL"
+
+  - type: "code"
+    title: "HTTP Client — Sync & Async"
+    language: "java"
+    code: |
+      HttpClient client = HttpClient.newBuilder()
+          .followRedirects(HttpClient.Redirect.NORMAL)
+          .build();
+
+      HttpRequest request = HttpRequest.newBuilder()
+          .uri(URI.create("https://api.example.com/data"))
+          .GET()
+          .build();
+
+      // Async
+      client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+          .thenApply(HttpResponse::body)
+          .thenAccept(System.out::println);
+
+      // Sync
+      HttpResponse<String> response = client.send(request,
+          HttpResponse.BodyHandlers.ofString());
+      System.out.println(response.body());
+
+  - type: "two-column"
+    title: "New String Methods"
+    left:
+      heading: "The Methods"
+      bullets:
+        - "isBlank() — true if empty or contains only whitespace; Unicode-aware unlike isEmpty()"
+        - "strip() / stripLeading() / stripTrailing() — Unicode-aware trim; replaces trim() which only removes ASCII chars up to U+0020"
+        - "lines() — splits on line terminators and returns a lazy Stream<String>"
+        - "repeat(int n) — returns the string repeated n times"
+    right:
+      heading: "Key Distinctions"
+      bullets:
+        - "trim() does not handle non-breaking space (U+00A0, code point 160) — strip() does"
+        - "lines() is lazy — does not split the whole string upfront; composable with stream operations"
+        - "repeat(0) returns an empty string; negative n throws IllegalArgumentException"
+
+  - type: "code"
+    title: "String Methods in Action"
+    language: "java"
+    code: |
+      // isBlank — Unicode-aware emptiness check
+      "   ".isBlank()     // true  (only whitespace)
+      "\u00A0".isBlank()  // true  (non-breaking space — trim() would miss this)
+
+      // strip — Unicode-aware trim
+      "  hello  ".strip()           // "hello"
+      "  hello  ".stripLeading()    // "hello  "
+      "  hello  ".stripTrailing()   // "  hello"
+
+      // lines — lazy Stream over line terminators
+      "line1\nline2\nline3".lines()
+          .map(String::toUpperCase)
+          .forEach(System.out::println);
+
+      // repeat
+      "Java ".repeat(3)  // "Java Java Java "
+      "-".repeat(20)     // "--------------------"
+
+  - type: "two-column"
+    title: "Single-File Programs (JEP 330)"
+    left:
+      heading: "What Changed"
+      bullets:
+        - "Run a .java file directly with java HelloWorld.java — no explicit javac step needed"
+        - "Launcher compiles the source in-memory and executes it immediately"
+        - "Compiled classes are not written to disk — in-memory only"
+        - "Not a replacement for full builds — explicitly scoped to single-file programs"
+    right:
+      heading: "Features"
+      bullets:
+        - "First top-level class must contain public static void main(String[])"
+        - "Class path, module path, and --add-modules all still work as normal"
+        - "Supports shebang files on Unix/macOS/Linux — make a Java file directly executable"
+        - "Directly enabled JEP 445 in Java 21 (unnamed classes and instance main methods)"
+
+  - type: "code"
+    title: "Single-File Programs — Before Java 11"
+    language: "bash"
+    caption: "Before Java 11 — two steps"
+    code: |
+      javac HelloWorld.java
+      java  HelloWorld
+
+  - type: "code"
+    title: "Single-File Programs — Java 11+"
+    language: "bash"
+    caption: "Java 11+ — one step, in-memory compilation"
+    code: |
+      java HelloWorld.java
+
+      # Shebang file (Unix/macOS/Linux) — file named 'hello', no .java extension
+      #!/path/to/java --source 11
+
+
+
   # ----------------------- Java 12–17 -----------------------
   - $include: "src/presentation_java_9_25/java_12_17/index.yml"
 
@@ -64,6 +347,12 @@ slides:
   - type: "section"
     title: "Join JUGT"
     subtitle: "Grow the Java community"
+
+  - type: "qr"
+    title: "Scan to Join"
+    subtitle: "Java User Group Tunisia"
+    url: ""
+    hint: "Open your camera and scan"
 
   - type: "closing"
     title: "Thank You"

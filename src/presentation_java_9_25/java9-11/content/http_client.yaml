@@ -1,0 +1,42 @@
+- type: "section"
+  title: "Java 11 — September 2018"
+  subtitle: "First LTS under the new 6-month release model"
+
+- type: "two-column"
+  title: "HTTP Client API (JEP 321)"
+  left:
+    heading: "What Is New"
+    bullets:
+      - "Standardizes the HTTP Client incubating since Java 9 (JEP 110), refined through Java 10"
+      - "Lives in java.net.http — replaces HttpURLConnection which dates back to Java 1.1"
+      - "Supports HTTP/1.1 and HTTP/2 natively — no external library needed"
+      - "Built-in WebSocket support"
+  right:
+    heading: "Design"
+    bullets:
+      - "Fully asynchronous — non-blocking requests via CompletableFuture"
+      - "Back-pressure and flow control via java.util.concurrent.Flow (reactive streams)"
+      - "HttpClient is the entry point — builder pattern for redirects, auth, executor, and SSL"
+
+- type: "code"
+  title: "HTTP Client — Sync & Async"
+  language: "java"
+  code: |
+    HttpClient client = HttpClient.newBuilder()
+        .followRedirects(HttpClient.Redirect.NORMAL)
+        .build();
+
+    HttpRequest request = HttpRequest.newBuilder()
+        .uri(URI.create("https://api.example.com/data"))
+        .GET()
+        .build();
+
+    // Async
+    client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+        .thenApply(HttpResponse::body)
+        .thenAccept(System.out::println);
+
+    // Sync
+    HttpResponse<String> response = client.send(request,
+        HttpResponse.BodyHandlers.ofString());
+    System.out.println(response.body());
