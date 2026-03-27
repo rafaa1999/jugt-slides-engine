@@ -1,0 +1,6 @@
+- type: "closing"
+  title: "Thank You"
+  subtitle: "Questions?"
+  callToAction:
+    label: "Java User Group Tunisia"
+    url: ""

@@ -1,0 +1,34 @@
+- type: "two-column"
+  title: "Single-File Programs (JEP 330)"
+  left:
+    heading: "What Changed"
+    bullets:
+      - "Run a .java file directly with java HelloWorld.java — no explicit javac step needed"
+      - "Launcher compiles the source in-memory and executes it immediately"
+      - "Compiled classes are not written to disk — in-memory only"
+      - "Not a replacement for full builds — explicitly scoped to single-file programs"
+  right:
+    heading: "Features"
+    bullets:
+      - "First top-level class must contain public static void main(String[])"
+      - "Class path, module path, and --add-modules all still work as normal"
+      - "Supports shebang files on Unix/macOS/Linux — make a Java file directly executable"
+      - "Directly enabled JEP 445 in Java 21 (unnamed classes and instance main methods)"
+
+- type: "code"
+  title: "Single-File Programs — Before Java 11"
+  language: "bash"
+  caption: "Before Java 11 — two steps"
+  code: |
+    javac HelloWorld.java
+    java  HelloWorld
+
+- type: "code"
+  title: "Single-File Programs — Java 11+"
+  language: "bash"
+  caption: "Java 11+ — one step, in-memory compilation"
+  code: |
+    java HelloWorld.java
+
+    # Shebang file (Unix/macOS/Linux) — file named 'hello', no .java extension
+    #!/path/to/java --source 11

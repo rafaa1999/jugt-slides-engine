@@ -1,0 +1,35 @@
+- type: "two-column"
+  title: "New String Methods"
+  left:
+    heading: "The Methods"
+    bullets:
+      - "isBlank() — true if empty or contains only whitespace; Unicode-aware unlike isEmpty()"
+      - "strip() / stripLeading() / stripTrailing() — Unicode-aware trim; replaces trim() which only removes ASCII chars up to U+0020"
+      - "lines() — splits on line terminators and returns a lazy Stream<String>"
+      - "repeat(int n) — returns the string repeated n times"
+  right:
+    heading: "Key Distinctions"
+    bullets:
+      - "trim() does not handle non-breaking space (U+00A0, code point 160) — strip() does"
+      - "lines() is lazy — does not split the whole string upfront; composable with stream operations"
+      - "repeat(0) returns an empty string; negative n throws IllegalArgumentException"
+
+- type: "code"
+  title: "String Methods in Action"
+  language: "java"
+  code: |
+    // isBlank — Unicode-aware emptiness check
+    "   ".isBlank()     // true  (only whitespace)
+    "\u00A0".isBlank()  // true  (non-breaking space — trim() would miss this)
+
+    // strip — Unicode-aware trim
+    "  hello  ".strip()           // "hello"
+    "  hello  ".stripLeading()    // "hello  "
+    "  hello  ".stripTrailing()   // "  hello"
+
+    // lines — lazy Stream over line terminators
+    "line1\nline2\nline3".lines()
+        .map(String::toUpperCase)
+        .forEach(System.out::println);
+
+

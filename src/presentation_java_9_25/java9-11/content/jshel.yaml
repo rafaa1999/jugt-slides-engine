@@ -1,0 +1,27 @@
+- type: "two-column"
+  title: "JShell: Java Gets a REPL"
+  left:
+    heading: "Key Points"
+    bullets:
+      - "JShell (JEP 222) = Java's first official Read-Eval-Print Loop"
+      - "Type declarations, statements, and expressions directly — no class or main() needed"
+      - "Designed for rapid exploration, prototyping, and learning"
+  right:
+    heading: "Details"
+    bullets:
+      - "Ships as a command-line tool (jshell) and a public API — IDEs can embed it"
+      - "State is maintained across entries — variables and methods persist in the session"
+      - "JEP created in 2014 and took three years to deliver"
+
+- type: "code"
+  title: "JShell in Action"
+  language: "text"
+  code: |
+    jshell> int x = 10
+    x ==> 10
+
+    jshell> x * x
+    $2 ==> 100
+
+    jshell> "hello".toUpperCase()
+    $3 ==> "HELLO"

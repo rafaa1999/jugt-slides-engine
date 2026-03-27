@@ -1,0 +1,44 @@
+- type: "section"
+  title: "Java 9 — September 2017"
+  subtitle: "The Modular Platform"
+
+- type: "two-column"
+  title: "What is Modularity & Why It Mattered"
+  left:
+    heading: "The Problem"
+    bullets:
+      - "Entire JDK was one monolithic block — you shipped everything even if you used 10% of it"
+      - "No strong boundary between public APIs and internals — developers relied on sun.misc.Unsafe"
+      - "Large applications were hard to maintain and secure at scale"
+  right:
+    heading: "The Context"
+    bullets:
+      - "The JDK itself needed to scale down for small devices and dense cloud deployments"
+      - "Project Jigsaw started in August 2008, design & implementation for Java 9 began in 2014"
+      - "This was a 9-year effort before shipping in September 2017"
+
+- type: "two-column"
+  title: "JPMS: Java Platform Module System"
+  left:
+    heading: "Core Concepts"
+    bullets:
+      - "JPMS = JSR 376, implemented by JEP 261"
+      - "A module = a named, self-describing collection of code and data with explicit dependencies"
+      - "Every module declares what it exports (public API) and what it requires (dependencies)"
+      - "Internal APIs such as sun.* are now encapsulated by default (JEP 260)"
+  right:
+    heading: "What It Unlocks"
+    bullets:
+      - "JDK itself was split into modules: java.base, java.sql, java.xml, etc. (JEP 200)"
+      - "jlink (JEP 282): create a custom minimal JRE containing only the modules your app needs"
+      - "Reflective access to non-exported packages is now restricted by default"
+
+- type: "code"
+  title: "JPMS — module-info.java"
+  language: "java"
+  code: |
+    // module-info.java
+    module com.myapp.core {
+        requires java.sql;
+        exports com.myapp.api;
+    }
