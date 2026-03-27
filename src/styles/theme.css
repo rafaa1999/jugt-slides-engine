@@ -240,7 +240,7 @@ body::after {
 }
 
 .codeframe::before {
-    content: "CAFEBABE  •  JVM";
+    content: " JVM";
     display: block;
     height: 36px;
     padding: 10px 14px 0 14px;

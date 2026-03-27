@@ -71,6 +71,32 @@ function requiredObject(v, name) {
     return v;
 }
 
+function resolveIncludes(slides, baseDir) {
+    const result = [];
+    for (const slide of slides) {
+        if (slide && typeof slide.$include === "string") {
+            const includePath = path.resolve(baseDir, slide.$include);
+            const raw = safeRead(includePath);
+            if (!raw) {
+                logWarn(`$include not found: ${includePath}`);
+                continue;
+            }
+            let included;
+            try {
+                included = yaml.load(raw);
+            } catch (e) {
+                throw new Error(`Failed to parse included file ${includePath}: ${e?.message ?? String(e)}`);
+            }
+            if (included && Array.isArray(included.slides)) {
+                result.push(...resolveIncludes(included.slides, path.dirname(includePath)));
+            }
+        } else {
+            result.push(slide);
+        }
+    }
+    return result;
+}
+
 function loadTalk() {
     const yamlRaw = safeRead(TALK_YAML);
     const jsonRaw = safeRead(TALK_JSON);
@@ -105,7 +131,7 @@ function validateAndEnrich(doc) {
 
     const presenters = normalizeArray(doc.presenters);
     const sponsors = normalizeArray(doc.sponsors);
-    const slides = normalizeArray(doc.slides);
+    const slides = resolveIncludes(normalizeArray(doc.slides), ROOT);
 
     const out = {
         _generatedAt: nowIso(),

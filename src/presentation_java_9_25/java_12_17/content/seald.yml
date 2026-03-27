@@ -1,0 +1,102 @@
+slides:
+  - type: "section"
+    title: "Sealed Class"
+    subtitle: "From Java 15 Preview to Final in Java 17"
+
+  - type: "section"
+    title: "Why Do We Need Sealed Classes?"
+    subtitle: "Open inheritance hierarchies are hard to reason about"
+    bullets:
+      - "Any class could extend yours, no way to restrict it"
+      - "Compiler cannot verify exhaustiveness in switch/pattern matching"
+      - "Algebraic data types (like enums for objects) had no clean Java equivalent"
+    note: "Sealed classes give the compiler a complete, closed list of permitted subtypes"
+
+  - type: "code"
+    title: "Java 15: Sealed Class Syntax"
+    language: "java"
+    code: |
+      public sealed class Shape
+          permits Circle, Rectangle, Square { }
+
+      // Every permitted subclass must declare one of:
+      final class Circle    extends Shape { }  // no further extension
+      final class Rectangle extends Shape { }  // no further extension
+      non-sealed class Square extends Shape { }  // open again
+    caption: "sealed permits locks the hierarchy, each subclass must be final, sealed, or non-sealed"
+
+  - type: "section"
+    title: "Java 15: First Preview (JEP 360)"
+    subtitle: "Closed hierarchies with explicit subtype control"
+    bullets:
+      - "New contextual keywords: sealed, permits, non-sealed"
+      - "Sealed class and its subclasses must be in the same package or module"
+      - "Every permitted subclass must explicitly extend the sealed class"
+      - "permits clause is mandatory, all subclasses listed explicitly"
+    note: "Preview: opt-in required with --enable-preview"
+
+  - type: "section"
+    title: "Java 16: Second Preview (JEP 397)"
+    subtitle: "Implicit permits + reflection API"
+    bullets:
+      - "permits clause optional when subclasses are in the same .java file"
+      - "Compiler infers permitted subclasses automatically from the same compilation unit"
+      - "New reflection method: Class.getPermittedSubclasses()"
+      - "JVM class file updated with PermittedSubclasses attribute"
+    note: "Frameworks and libraries can now query sealed hierarchies via reflection"
+
+  - type: "code-compare"
+    title: "Java 15 vs Java 16: permits clause"
+    left:
+      title: "Java 15: Explicit permits required"
+      language: "java"
+      caption: "All subclasses must be listed, error if permits clause is missing"
+      code: |
+        public sealed class Shape
+            permits Circle, Rectangle { }
+
+        final class Circle    extends Shape { }
+        final class Rectangle extends Shape { }
+    right:
+      title: "Java 16: Implicit permits (same file)"
+      language: "java"
+      caption: "Compiler infers permitted subclasses when declared in the same .java file"
+      code: |
+        // Inside Shape.java no permits clause needed
+        public sealed class Shape { }
+
+        final class Circle    extends Shape { }
+        final class Rectangle extends Shape { }
+
+  - type: "code"
+    title: "Java 16: Reflection API"
+    language: "java"
+    code: |
+      Class<?> shapeClass = Shape.class;
+
+      Class<?>[] permitted = shapeClass.getPermittedSubclasses();
+
+      for (Class<?> sub : permitted) {
+          System.out.println(sub.getSimpleName());
+      }
+      // Output:
+      // Circle
+      // Rectangle
+    caption: "getPermittedSubclasses() lets frameworks inspect sealed hierarchies at runtime"
+
+  - type: "two-column"
+    title: "Sealed Classes: Java 15 Preview → Java 17 Final"
+    left:
+      heading: "Java 15–16 (Preview)"
+      bullets:
+        - "Opt-in with --enable-preview"
+        - "Java 15: explicit permits mandatory"
+        - "Java 16: implicit permits + reflection API"
+        - "JVM PermittedSubclasses attribute added"
+    right:
+      heading: "Java 17 (Final — JEP 409)"
+      bullets:
+        - "Standard feature, no flag required"
+        - "Syntax and rules from Java 16 unchanged"
+        - "Enables exhaustiveness checking in pattern matching"
+        - "Foundation for sealed interfaces + pattern switch (Java 21)"

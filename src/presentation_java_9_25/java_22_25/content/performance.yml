@@ -1,0 +1,79 @@
+slides:
+  # SLIDE SEULE : Titre du Chapitre
+  - type: "section"
+    title: "Performance Improvements"
+    subtitle: "JVM Runtime Optimizations (Java 24)"
+
+  - type: "two-column"
+    title: "The Memory Problem: Object Headers"
+    subtitle: "The 'Tax' on every Java Object"
+    left:
+      heading: "What is an Object Header?"
+      bullets:
+        - "Like a 'Shipping Label' on every box"
+        - "Stores metadata (Identity, Locks, GC state)"
+        - "Takes up space even if the object is empty"
+    right:
+      heading: "The Scalability Issue"
+      bullets:
+        - "Millions of objects = Gigabytes of 'Labels'"
+        - "Less space for actual data"
+        - "Impacts large-scale Cloud applications"
+
+  - type: "code"
+    title: "The Cost of Millions of Objects"
+    language: "java"
+    code: |
+      class User {
+          int id; // 4 bytes of data
+          // But the Header adds ~12-16 bytes!
+      }
+
+      for (int i = 0; i < 1_000_000; i++) {
+          new User(); // 'Labels' consume more RAM than data
+      }
+    caption: "The overhead happens automatically. Project Lilliput aims to shrink these 'labels' to save memory."
+
+  - type: "two-column"
+    title: "The Solution: Project Lilliput"
+    subtitle: "Compact Object Headers"
+    left:
+      heading: "The Optimization"
+      bullets:
+        - "Reduces header size significantly (up to 50%)"
+        - "Shrinks the 'Shipping Label' to the minimum"
+    right:
+      heading: "The Real Benefits"
+      bullets:
+        - "Massive memory savings (10-20% total RAM)"
+        - "Better CPU cache efficiency (Faster code)"
+        - "Zero code changes required by developers"
+
+  - type: "two-column"
+    title: "The Startup Problem: Cold Starts"
+    subtitle: "Why Java can be slow to wake up"
+    left:
+      heading: "Traditional Loading"
+      bullets:
+        - "Classes are loaded and linked during execution"
+        - "Like a chef reading the recipe while cooking"
+    right:
+      heading: "The Cloud Impact"
+      bullets:
+        - "Slower startup in Serverless/AWS Lambda"
+        - "High latency during the first few seconds"
+
+  - type: "two-column"
+    title: "AOT: Ahead-of-Time Loading"
+    subtitle: "Preparing before execution"
+    left:
+      heading: "The AOT Solution"
+      bullets:
+        - "JVM prepares classes before the app starts"
+        - "Like prepping all ingredients before the rush"
+    right:
+      heading: "The Benefits"
+      bullets:
+        - "Instant startup for Microservices"
+        - "Lower memory usage at boot time"
+        - "Perfect for modern Cloud environments"

@@ -293,6 +293,37 @@ pre,
     border-color: rgba(248, 152, 32, 0.18);
 }
 
+.section-bullets {
+    list-style: none;
+    margin: 20px 0 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.section-bullet {
+    color: var(--fg1);
+    font-size: clamp(14px, 1.5vw, 18px);
+    padding-left: 20px;
+    position: relative;
+    list-style: none;
+}
+
+.section-bullet::before {
+    content: "▸";
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+}
+
+.section-note {
+    margin-top: 20px;
+    color: var(--fg2);
+    font-size: clamp(12px, 1.2vw, 15px);
+    font-style: italic;
+}
+
 /* =========================================================
    SLIDE TYPES
 ========================================================= */
@@ -367,6 +398,33 @@ pre,
     padding: 18px !important;
     display: block;
 }
+.codeframe--compact code {
+    font-size: 13px;
+    line-height: 1.45;
+    padding: 14px !important;
+}
+
+/* Code compare (two-column code) */
+.codecompare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    width: 100%;
+}
+.codecompare__col {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
+.codecompare__label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--fg2);
+    padding: 0 2px;
+}
 
 /* =========================================================
    MEDIA (FIXED)
@@ -403,6 +461,20 @@ pre,
 
 .mediaframe__video {
     object-fit: contain;
+}
+
+/* SECTION SLIDES: center card and content */
+.jugt-slide[data-type="section"] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.jugt-slide[data-type="section"] .slide-body {
+    margin: 0 auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 /* MEDIA SLIDES: body becomes column, media takes remaining space */
@@ -459,7 +531,7 @@ pre,
 }
 .speaker {
     display: grid;
-    grid-template-columns: 84px 1fr;
+    grid-template-columns: min-content 1fr;
     gap: 14px;
     align-items: center;
     border-radius: var(--radius2);
@@ -491,11 +563,17 @@ pre,
     font-size: 20px;
     font-weight: 900;
     color: var(--fg0);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .speaker__meta {
     margin-top: 2px;
     font-size: 14px;
     color: var(--fg2);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .speaker__socials {
     margin-top: 10px;

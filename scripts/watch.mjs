@@ -48,6 +48,7 @@ async function start() {
     const watchPaths = [
         path.join(ROOT, "talk.yml"),
         path.join(ROOT, "talk.json"),
+        path.join(ROOT, "src", "presentation_java_9_25"),
         path.join(ROOT, "public", "assets")
     ];
 
