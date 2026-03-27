@@ -9,4 +9,4 @@ slides:
   - $include: "content/sequenced_collections.yml"
   - $include: "content/sequenced_collection_diagram.yml"
   - $include: "content/utf-8.yml"
-  - $include: "content/simple_web_server.yml"
+#  - $include: "content/simple_web_server.yml"

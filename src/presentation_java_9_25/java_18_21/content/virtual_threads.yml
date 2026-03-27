@@ -15,23 +15,18 @@ slides:
     left:
       title: "Platform thread"
       language: "java"
-      caption: "Thread pool way is most common in real apps. We can also use Thread.ofPlatform()."
       code: |
-        Thread thread = new Thread(() -> {
-          System.out.println("Platform thread running");
-        });
-        thread.start();
-        // Or using thread pool
-        ExecutorService executor = Executors.newFixedThreadPool(10);
-        executor.submit(() -> {
-            System.out.println("Task running in platform thread");
-        });
-
-        executor.shutdown();
+        // Option 1:
+          new Thread(() -> {}).start();
+        
+        // Option 2: Factory builder
+          Thread t = Thread.ofPlatform().start(runnable);
+        
+        // Option 3: With ExecutorService (one VT per task)
+          ExecutorService es = Executors.newFixedThreadPool(10);
     right:
       title: "Virtual thread"
       language: "java"
-      caption: "Using Virtual Thread Executor is recommended. We can also use Thread.ofVirtual()."
       code: |
         // Option 1: Direct start
           Thread.startVirtualThread(() -> {});

@@ -75,39 +75,3 @@ slides:
       map.reversed().forEach((k, v) ->
         System.out.println(k + " = " + v)
       ); // three=3, two=2, one=1
-
-  - type: "code-compare"
-    title: "Getting last element safely"
-    left:
-      title: "Before"
-      language: "java"
-      code: |
-        String last;
-        if (!list.isEmpty()) {
-          last = list.get(list.size() - 1);   
-            // verbose, index arithmetic
-        }
-    right:
-      title: "After"
-      language: "java"
-      code: |
-        String last = list.getLast(); // clean, throws NoSuchElementException if empty
-          // or safely:
-        Optional<String> last = list.isEmpty() 
-                ? Optional.empty()
-                : Optional.of(list.getLast());
-
-  - type: "code-compare"
-    title: "Processing a list in reverse"
-    left:
-      title: "Before"
-      language: "java"
-      code: |
-        List<String> reversed = new ArrayList<>(list);
-        Collections.reverse(reversed);
-        reversed.forEach(System.out::println);
-    right:
-      title: "After"
-      language: "java"
-      code: |
-        list.reversed().forEach(System:out::println);:

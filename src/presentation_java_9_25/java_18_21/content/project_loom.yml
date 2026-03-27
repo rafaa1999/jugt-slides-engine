@@ -1,7 +1,7 @@
 slides:
   - type: "section"
     title: "Project Loom"
-    subtitle: "From Java 14 Preview to Final in Java 17"
+    subtitle: "From Java 19 Preview to Final in Java 21"
 
   - type: "section"
     title: "What is concurrency?"
