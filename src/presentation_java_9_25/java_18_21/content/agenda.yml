@@ -10,4 +10,4 @@ slides:
       - "Record Patterns"
       - "Sequenced Collections"
       - "UTF-8 by default"
-      - "Simple Web Server"
+#      - "Simple Web Server"
